@@ -10,6 +10,7 @@
   color: #3730a3;
   margin-bottom: 2rem;
   text-align: center;
+  letter-spacing: -1px;
 }
 
 .dashboard-cards {
@@ -34,4 +35,9 @@
   font-size: 1.3rem;
   font-weight: 700;
   margin-bottom: 1.5rem;
+}
+
+.dashboard-subtext {
+  color: #64748b;
+  font-size: 1.1rem;
 }

@@ -1,0 +1,37 @@
+.add-expense-container {
+  background: rgba(255,255,255,0.97);
+  border-radius: 1.5rem;
+  box-shadow: 0 4px 24px rgba(60,72,100,0.10);
+  padding: 2rem;
+  margin-top: 2rem;
+}
+
+.add-expense-form {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr auto;
+  gap: 1rem;
+}
+
+.add-expense-form input,
+.add-expense-form select {
+  border: 1px solid #e5e7eb;
+  border-radius: 0.5rem;
+  padding: 0.75rem;
+  background: #f3f4f6;
+  font-size: 1rem;
+}
+
+.add-expense-form button {
+  background: linear-gradient(90deg, #6366f1 0%, #06b6d4 100%);
+  color: #fff;
+  font-weight: 600;
+  border: none;
+  border-radius: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.add-expense-form button:hover {
+  background: linear-gradient(90deg, #3730a3 0%, #0ea5e9 100%);
+}

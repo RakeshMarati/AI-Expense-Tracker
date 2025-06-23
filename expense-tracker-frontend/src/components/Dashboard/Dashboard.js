@@ -1,18 +1,18 @@
 import React from "react";
 import SpendingChart from "./SpendingChart";
-import "./DashBoard.css";
+import "./Dashboard.css";
 
-const Dashboard = () => (
+const Dashboard = ({ expenses }) => (
   <div className="dashboard-container">
-    <h2 className="dashboard-title">Dashboard</h2>
+    <h2 className="dashboard-title">Welcome to Your Dashboard</h2>
     <div className="dashboard-cards">
       <div className="dashboard-card">
         <h3>Spending Overview</h3>
-        <SpendingChart />
+        <SpendingChart expenses={expenses} />
       </div>
       <div className="dashboard-card">
         <h3>Budget & Goals</h3>
-        <p style={{ color: "#64748b", fontSize: "1.1rem" }}>
+        <p className="dashboard-subtext">
           Set and track your financial goals here.
         </p>
       </div>

@@ -1,0 +1,27 @@
+.expense-list-container {
+  background: rgba(255,255,255,0.97);
+  border-radius: 1.5rem;
+  box-shadow: 0 4px 24px rgba(60,72,100,0.10);
+  padding: 2rem;
+  margin-top: 2rem;
+}
+
+.expense-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.expense-table th, .expense-table td {
+  padding: 0.75rem 1rem;
+  text-align: left;
+}
+
+.expense-table th {
+  color: #6366f1;
+  font-weight: 700;
+  background: #f3f4f6;
+}
+
+.expense-table tr:nth-child(even) {
+  background: #f9fafb;
+}

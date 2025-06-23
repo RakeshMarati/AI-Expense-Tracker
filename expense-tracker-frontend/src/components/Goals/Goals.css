@@ -1,0 +1,64 @@
+.goal-add-form {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  justify-content: center;
+}
+
+.goal-btn {
+  background: linear-gradient(90deg, #6366f1 0%, #06b6d4 100%);
+  color: #fff;
+  font-weight: 600;
+  border: none;
+  border-radius: 0.5rem;
+  padding: 0.5rem 1.2rem;
+  cursor: pointer;
+  transition: background 0.2s, box-shadow 0.2s;
+  font-size: 1rem;
+  box-shadow: 0 2px 8px rgba(99,102,241,0.08);
+}
+
+.goal-btn:hover {
+  background: linear-gradient(90deg, #3730a3 0%, #0ea5e9 100%);
+  box-shadow: 0 4px 16px rgba(99,102,241,0.15);
+}
+
+.add-btn {
+  background: linear-gradient(90deg, #10b981 0%, #06b6d4 100%);
+}
+.add-btn:hover {
+  background: linear-gradient(90deg, #059669 0%, #0ea5e9 100%);
+}
+
+.save-btn {
+  background: linear-gradient(90deg, #6366f1 0%, #22c55e 100%);
+}
+.save-btn:hover {
+  background: linear-gradient(90deg, #3730a3 0%, #16a34a 100%);
+}
+
+.modify-btn {
+  background: linear-gradient(90deg, #f59e42 0%, #6366f1 100%);
+}
+.modify-btn:hover {
+  background: linear-gradient(90deg, #ea580c 0%, #3730a3 100%);
+}
+
+.goal-edit-input, .goal-edit-select {
+  border: 1px solid #e5e7eb;
+  border-radius: 0.5rem;
+  padding: 0.5rem;
+  font-size: 1rem;
+}
+
+.goals-list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #f3f4f6;
+  border-radius: 0.75rem;
+  padding: 1rem 1.5rem;
+  margin-bottom: 1rem;
+  font-size: 1.1rem;
+  gap: 1rem;
+}

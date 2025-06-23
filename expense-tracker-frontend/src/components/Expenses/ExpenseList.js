@@ -1,24 +1,25 @@
 import React from "react";
+import "./ExpenseList.css";
 
 const ExpenseList = ({ expenses }) => (
-  <div className="bg-white/90 p-8 rounded-2xl shadow-lg mt-8">
+  <div className="expense-list-container">
     <h3 className="font-semibold mb-4 text-lg text-blue-600">Expenses</h3>
-    <table className="w-full text-left divide-y divide-gray-200">
+    <table className="expense-table">
       <thead>
         <tr>
-          <th className="py-2">Name</th>
-          <th className="py-2">Amount</th>
-          <th className="py-2">Category</th>
-          <th className="py-2">Date</th>
+          <th>Name</th>
+          <th>Amount</th>
+          <th>Category</th>
+          <th>Date</th>
         </tr>
       </thead>
       <tbody>
         {expenses.map(exp => (
-          <tr key={exp.id} className="hover:bg-indigo-50 transition">
-            <td className="py-2">{exp.name}</td>
-            <td className="py-2 font-semibold text-indigo-700">${exp.amount}</td>
-            <td className="py-2">{exp.category}</td>
-            <td className="py-2">{exp.date}</td>
+          <tr key={exp.id}>
+            <td>{exp.name}</td>
+            <td className="font-semibold text-indigo-700">${exp.amount}</td>
+            <td>{exp.category}</td>
+            <td>{exp.date}</td>
           </tr>
         ))}
       </tbody>

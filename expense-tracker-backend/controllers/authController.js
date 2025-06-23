@@ -3,12 +3,12 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 
 export const register = async (req, res) => {
-  const { name, email, password } = req.body;
+  const { firstName, lastName, age, gender, mobile, email, password } = req.body;
   try {
     let user = await User.findOne({ email });
     if (user) return res.status(400).json({ msg: 'User already exists' });
 
-    user = new User({ name, email, password });
+    user = new User({ firstName, lastName, age, gender, mobile, email, password });
     const salt = await bcrypt.genSalt(10);
     user.password = await bcrypt.hash(password, salt);
     await user.save();
@@ -16,7 +16,9 @@ export const register = async (req, res) => {
     const payload = { user: { id: user.id } };
     jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '7d' }, (err, token) => {
       if (err) throw err;
-      res.json({ token });
+      // Exclude password from user info
+      const { password, ...userInfo } = user.toObject();
+      res.json({ token, user: userInfo });
     });
   } catch (err) {
     res.status(500).send('Server error');
@@ -35,7 +37,9 @@ export const login = async (req, res) => {
     const payload = { user: { id: user.id } };
     jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '7d' }, (err, token) => {
       if (err) throw err;
-      res.json({ token });
+      // Exclude password from user info
+      const { password, ...userInfo } = user.toObject();
+      res.json({ token, user: userInfo });
     });
   } catch (err) {
     res.status(500).send('Server error');
