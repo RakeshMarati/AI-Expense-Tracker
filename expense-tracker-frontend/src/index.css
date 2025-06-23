@@ -1,0 +1,8 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom nav-link style for navigation */
+.nav-link {
+  @apply text-gray-700 hover:text-indigo-600 font-medium transition-colors duration-200;
+}
