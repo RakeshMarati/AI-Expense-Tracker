@@ -2,7 +2,7 @@ import React from "react";
 import SpendingChart from "./SpendingChart";
 import "./Dashboard.css";
 
-const Dashboard = ({ expenses }) => (
+const Dashboard = ({ expenses, goals = [] }) => (
   <div className="dashboard-container">
     <h2 className="dashboard-title">Welcome to Your Dashboard</h2>
     <div className="dashboard-cards">
@@ -12,9 +12,17 @@ const Dashboard = ({ expenses }) => (
       </div>
       <div className="dashboard-card">
         <h3>Budget & Goals</h3>
-        <p className="dashboard-subtext">
-          Set and track your financial goals here.
-        </p>
+        {goals.length === 0 ? (
+          <p className="dashboard-subtext">No goals set yet.</p>
+        ) : (
+          <ul>
+            {goals.map(goal => (
+              <li key={goal._id || goal.id}>
+                {goal.description} <span className="goals-status">{goal.status}</span>
+              </li>
+            ))}
+          </ul>
+        )}
       </div>
     </div>
   </div>

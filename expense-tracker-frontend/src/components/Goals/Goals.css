@@ -1,64 +1,119 @@
-.goal-add-form {
-  display: flex;
-  gap: 1rem;
-  margin-bottom: 2rem;
-  justify-content: center;
+.goals-container {
+  background: #fff;
+  padding: 2rem;
+  border-radius: 1rem;
+  box-shadow: 0 2px 16px 0 rgba(0,0,0,0.07);
+  max-width: 600px;
+  margin: 2rem auto;
 }
-
-.goal-btn {
-  background: linear-gradient(90deg, #6366f1 0%, #06b6d4 100%);
-  color: #fff;
+.goals-title {
+  font-size: 1.5rem;
   font-weight: 600;
-  border: none;
-  border-radius: 0.5rem;
-  padding: 0.5rem 1.2rem;
-  cursor: pointer;
-  transition: background 0.2s, box-shadow 0.2s;
-  font-size: 1rem;
-  box-shadow: 0 2px 8px rgba(99,102,241,0.08);
+  color: #2563eb;
+  margin-bottom: 1.5rem;
 }
-
-.goal-btn:hover {
-  background: linear-gradient(90deg, #3730a3 0%, #0ea5e9 100%);
-  box-shadow: 0 4px 16px rgba(99,102,241,0.15);
+.goal-add-form, .goal-edit-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
 }
-
-.add-btn {
-  background: linear-gradient(90deg, #10b981 0%, #06b6d4 100%);
-}
-.add-btn:hover {
-  background: linear-gradient(90deg, #059669 0%, #0ea5e9 100%);
-}
-
-.save-btn {
-  background: linear-gradient(90deg, #6366f1 0%, #22c55e 100%);
-}
-.save-btn:hover {
-  background: linear-gradient(90deg, #3730a3 0%, #16a34a 100%);
-}
-
-.modify-btn {
-  background: linear-gradient(90deg, #f59e42 0%, #6366f1 100%);
-}
-.modify-btn:hover {
-  background: linear-gradient(90deg, #ea580c 0%, #3730a3 100%);
-}
-
-.goal-edit-input, .goal-edit-select {
+.goal-edit-input {
+  padding: 0.5rem 0.75rem;
   border: 1px solid #e5e7eb;
   border-radius: 0.5rem;
-  padding: 0.5rem;
   font-size: 1rem;
+  background: #f9fafb;
+  transition: border 0.2s;
 }
-
+.goal-edit-input:focus {
+  border-color: #2563eb;
+  outline: none;
+}
+.goal-btn {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 0.5rem;
+  font-weight: 500;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+.add-btn {
+  background: #2563eb;
+  color: #fff;
+}
+.add-btn:hover {
+  background: #1d4ed8;
+}
+.edit-btn {
+  background: #fbbf24;
+  color: #fff;
+  margin-left: 0.5rem;
+}
+.edit-btn:hover {
+  background: #f59e42;
+}
+.delete-btn {
+  background: #ef4444;
+  color: #fff;
+  margin-left: 0.5rem;
+}
+.delete-btn:hover {
+  background: #dc2626;
+}
+.save-btn {
+  background: #10b981;
+  color: #fff;
+  margin-left: 0.5rem;
+}
+.save-btn:hover {
+  background: #059669;
+}
+.cancel-btn {
+  background: #e5e7eb;
+  color: #374151;
+  margin-left: 0.5rem;
+}
+.cancel-btn:hover {
+  background: #d1d5db;
+}
+.goals-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
 .goals-list li {
   display: flex;
-  justify-content: space-between;
+  flex-wrap: wrap;
   align-items: center;
-  background: #f3f4f6;
-  border-radius: 0.75rem;
-  padding: 1rem 1.5rem;
-  margin-bottom: 1rem;
-  font-size: 1.1rem;
-  gap: 1rem;
+  justify-content: space-between;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #e5e7eb;
+  gap: 0.5rem;
+}
+.goals-status {
+  margin-left: 1rem;
+  color: #2563eb;
+  font-weight: 500;
+}
+.goal-status-badge {
+  margin-left: 0.75rem;
+  padding: 0.2em 0.7em;
+  border-radius: 0.5em;
+  font-size: 0.95em;
+  font-weight: 500;
+  vertical-align: middle;
+}
+.goal-status-badge.in\ progress {
+  background: #fef9c3;
+  color: #b45309;
+}
+.goal-status-badge.completed {
+  background: #d1fae5;
+  color: #065f46;
+}
+.goal-status-badge.failed {
+  background: #fee2e2;
+  color: #991b1b;
 }

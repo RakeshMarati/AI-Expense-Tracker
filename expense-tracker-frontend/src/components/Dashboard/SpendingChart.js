@@ -3,29 +3,40 @@ import { Doughnut } from "react-chartjs-2";
 import { Chart, ArcElement, Tooltip, Legend } from "chart.js";
 Chart.register(ArcElement, Tooltip, Legend);
 
-const categories = ["Food", "Transport", "Shopping", "Bills", "Other"];
-const colors = [
-  "#3b82f6", // Food
-  "#f59e42", // Transport
-  "#10b981", // Shopping
-  "#f43f5e", // Bills
-  "#6366f1"  // Other
-];
-
-function getCategoryTotals(expenses) {
-  const totals = categories.map(
-    cat => expenses.filter(e => e.category === cat).reduce((sum, e) => sum + Number(e.amount), 0)
-  );
+const getCategoryTotals = (expenses) => {
+  const totals = {};
+  expenses.forEach(exp => {
+    const cat = exp.category || "Other";
+    totals[cat] = (totals[cat] || 0) + Number(exp.amount || exp.targetAmount || 0);
+  });
   return totals;
-}
+};
+
+const getColors = (n) => {
+  const palette = [
+    "#3b82f6", "#f59e42", "#10b981", "#f43f5e", "#6366f1", "#a21caf", "#fbbf24", "#14b8a6", "#eab308"
+  ];
+  return Array.from({ length: n }, (_, i) => palette[i % palette.length]);
+};
 
 const SpendingChart = ({ expenses }) => {
+  // Show message if no expenses
+  if (!expenses || expenses.length === 0) {
+    return (
+      <div className="spending-chart-empty" style={{ textAlign: "center", color: "#64748b", padding: "2rem" }}>
+        No expenses added.
+      </div>
+    );
+  }
+
+  const categoryTotals = getCategoryTotals(expenses);
+  const categories = Object.keys(categoryTotals);
   const data = {
     labels: categories,
     datasets: [
       {
-        data: getCategoryTotals(expenses),
-        backgroundColor: colors,
+        data: categories.map(cat => categoryTotals[cat]),
+        backgroundColor: getColors(categories.length),
         borderWidth: 1,
       },
     ],
