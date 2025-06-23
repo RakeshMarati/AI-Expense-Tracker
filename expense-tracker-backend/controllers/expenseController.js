@@ -10,15 +10,14 @@ export const getExpenses = async (req, res) => {
 };
 
 export const addExpense = async (req, res) => {
-  const { name, amount, category, date, receiptUrl } = req.body;
+  const { name, amount, category, date } = req.body;
   try {
     const expense = new Expense({
       user: req.user.id,
       name,
       amount,
       category,
-      date,
-      receiptUrl
+      date
     });
     await expense.save();
     res.json(expense);
