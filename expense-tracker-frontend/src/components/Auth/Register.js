@@ -40,7 +40,12 @@ const Register = () => {
       window.dispatchEvent(new Event("auth"));
       navigate("/dashboard");
     } catch (err) {
-      setError(err.response?.data?.msg || "Registration failed");
+      
+      const backendMsg =
+        err.response?.data?.msg ||
+        err.response?.data?.message ||
+        err.response?.data?.error;
+      setError(backendMsg || "Registration failed");
     }
   };
 
