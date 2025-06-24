@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
+import API from "../../api/api";
 import SpendingChart from "./SpendingChart";
-import API from "../../api/api"; // Adjust the path if needed
 import "./Dashboard.css";
 
 const Dashboard = () => {
@@ -8,8 +8,8 @@ const Dashboard = () => {
   const [expenses, setExpenses] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    // Fetch goals and expenses in parallel
+  const fetchData = () => {
+    setLoading(true);
     Promise.all([
       API.get("/goals"),
       API.get("/expenses")
@@ -22,6 +22,10 @@ const Dashboard = () => {
         console.error("Failed to fetch dashboard data:", err);
       })
       .finally(() => setLoading(false));
+  };
+
+  useEffect(() => {
+    fetchData();
   }, []);
 
   if (loading) return <div>Loading dashboard...</div>;
