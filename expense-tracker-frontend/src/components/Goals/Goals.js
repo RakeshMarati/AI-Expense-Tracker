@@ -114,8 +114,37 @@ const Goals = () => {
       {/* Add Goal Form */}
       {adding ? (
         <form onSubmit={handleAddGoal} className="goal-add-form">
-          {/* ...add form fields... */}
-        </form>
+    <input
+      className="goal-edit-input"
+      placeholder="Description"
+      value={newGoal.description}
+      onChange={e => setNewGoal({ ...newGoal, description: e.target.value })}
+      required
+    />
+    <input
+      className="goal-edit-input"
+      type="number"
+      placeholder="Target Amount"
+      value={newGoal.targetAmount}
+      onChange={e => setNewGoal({ ...newGoal, targetAmount: e.target.value })}
+      required
+    />
+    <select
+      className="goal-edit-input"
+      value={newGoal.currency}
+      onChange={e => setNewGoal({ ...newGoal, currency: e.target.value })}
+    >
+      {currencyOptions.map(cur => <option key={cur} value={cur}>{cur}</option>)}
+    </select>
+    <input
+      className="goal-edit-input"
+      type="date"
+      value={newGoal.deadline}
+      onChange={e => setNewGoal({ ...newGoal, deadline: e.target.value })}
+    />
+    <button type="submit" className="goal-btn add-btn">Add</button>
+    <button type="button" className="goal-btn cancel-btn" onClick={() => setAdding(false)}>Cancel</button>
+  </form>
       ) : (
         <button className="goal-btn add-btn" style={{ marginTop: "1.5rem" }} onClick={() => setAdding(true)}>Add New Goal</button>
       )}
