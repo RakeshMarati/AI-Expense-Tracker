@@ -1,8 +1,9 @@
 import axios from "axios";
 
+
 const API = axios.create({
-  baseURL: "http://localhost:5001/api", // Use your backend port
-});
+     baseURL: "https://ai-expense-tracker-backend-lf6w.onrender.com/api",
+   });
 
 // Attach token from localStorage to every request (for auto-refresh)
 API.interceptors.request.use((config) => {
