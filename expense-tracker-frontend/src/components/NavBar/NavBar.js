@@ -6,7 +6,7 @@ const getUserInitials = () => {
   const user = JSON.parse(localStorage.getItem("user"));
   if (!user) return "U";
   const { firstName, lastName } = user;
-  return `${firstName?.[0] || ""}${lastName?.slice(-1) || ""}`.toUpperCase();
+  return `${firstName?.[0] || ""}${lastName?.[0] || ""}`.toUpperCase();
 };
 
 const NavBar = ({ onLogout }) => (
