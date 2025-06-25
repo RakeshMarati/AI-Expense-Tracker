@@ -5,7 +5,8 @@ const expenseSchema = new mongoose.Schema({
   name: { type: String, required: true },
   amount: { type: Number, required: true },
   category: { type: String, required: true },
-  date: { type: Date, required: true }
+  date: { type: Date, required: true },
+  currency: { type: String, default: 'INR' }
 });
 
 export default mongoose.model('Expense', expenseSchema);

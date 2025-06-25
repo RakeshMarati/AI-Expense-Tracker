@@ -102,7 +102,19 @@ function App() {
     }
   }
 };
-  
+
+  const handleModifyExpense = async (id, updatedExpense) => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      API.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+      try {
+        await API.put(`/expenses/${id}`, updatedExpense);
+        refreshExpenses(); // Refetch after update
+      } catch {
+        alert("Failed to update expense");
+      }
+    }
+  };
 
   return (
     <Router>
@@ -120,7 +132,7 @@ function App() {
             ) : (
               <>
                 <Route path="/dashboard" element={<Dashboard expenses={expenses} goals={goals} />} />
-                <Route path="/expenses" element={<div><AddExpense onAddExpense={handleAddExpense} /><ExpenseList expenses={expenses} onDeleteExpense={handleDeleteExpense}/></div>} />
+                <Route path="/expenses" element={<div><AddExpense onAddExpense={handleAddExpense} /><ExpenseList expenses={expenses} onDeleteExpense={handleDeleteExpense} onModifyExpense={handleModifyExpense}/></div>} />
                 <Route path="/goals" element={<Goals goals={goals} setGoals={setGoals} refreshGoals={refreshGoals} />} />
                 <Route path="/upload" element={<ReceiptUpload />} />
                 <Route path="*" element={<Navigate to="/dashboard" />} />
