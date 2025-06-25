@@ -67,6 +67,7 @@ const AddExpense = ({ onAddExpense }) => {
           value={form.category}
           onChange={handleChange}
         >
+          <option value="">Select</option>
           {categories.map(cat => (
             <option key={cat} value={cat}>{cat}</option>
           ))}
@@ -76,6 +77,8 @@ const AddExpense = ({ onAddExpense }) => {
           value={form.date}
           onChange={handleChange}
           type="date"
+          placeholder="Date"
+          style={{ minWidth: '0', width: '100%' }}
         />
         <select
           name="currency"
