@@ -20,6 +20,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/expenses', expenseRoutes);
 app.use('/api/goals', goalRoutes);
 app.use('/api/upload', uploadRoutes);
+app.use('/api/receipts', uploadRoutes);
 
 const PORT = process.env.PORT || 5001;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
