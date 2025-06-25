@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 import './ReceiptUpload.css';
 
 const ReceiptUpload = () => {
@@ -8,6 +9,10 @@ const ReceiptUpload = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [form, setForm] = useState({ name: '', amount: '', date: '', category: '', currency: 'INR' });
+  const [saveLoading, setSaveLoading] = useState(false);
+  const [successMsg, setSuccessMsg] = useState('');
+  const [saveError, setSaveError] = useState('');
+  const navigate = useNavigate();
 
   const handleFileChange = (e) => {
     setFile(e.target.files[0]);
@@ -29,7 +34,6 @@ const ReceiptUpload = () => {
     formData.append('receipt', file);
 
     try {
-      // Use your backend endpoint here
       const res = await axios.post('https://ai-expense-tracker-back.onrender.com/api/receipts/upload', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
@@ -56,16 +60,23 @@ const ReceiptUpload = () => {
   };
 
   const handleSaveExpense = async () => {
-    // Save the reviewed expense to the backend
+    setSaveLoading(true);
+    setSuccessMsg('');
+    setSaveError('');
     try {
       await axios.post('https://ai-expense-tracker-back.onrender.com/api/expenses', form);
-      alert('Expense saved!');
+      setSuccessMsg('Expense saved successfully! Redirecting to expenses...');
+      setTimeout(() => {
+        navigate('/expenses');
+      }, 1500);
       setExtractedData(null);
       setForm({ name: '', amount: '', date: '', category: '', currency: 'INR' });
       setFile(null);
     } catch (err) {
-      alert('Failed to save expense.');
+      setSaveError('Failed to save expense. Please try again.');
       console.error(err);
+    } finally {
+      setSaveLoading(false);
     }
   };
 
@@ -152,9 +163,11 @@ const ReceiptUpload = () => {
               </select>
             </form>
           </div>
-          <button className="save-expense-btn" onClick={handleSaveExpense}>
-            Confirm and Save Expense
+          <button className="save-expense-btn" onClick={handleSaveExpense} disabled={saveLoading}>
+            {saveLoading ? 'Saving...' : 'Confirm and Save Expense'}
           </button>
+          {successMsg && <p className="success-message">{successMsg}</p>}
+          {saveError && <p className="error-message">{saveError}</p>}
         </div>
       )}
     </div>
