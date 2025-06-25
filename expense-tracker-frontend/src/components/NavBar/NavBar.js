@@ -17,6 +17,12 @@ const NavBar = ({ onLogout }) => {
 
   return (
     <nav className="navbar">
+      {/* Overlay for mobile menu */}
+      <div
+        className={`navbar-overlay${menuOpen ? " open" : ""}`}
+        onClick={() => setMenuOpen(false)}
+        aria-hidden={!menuOpen}
+      />
       <div className="navbar-container">
         <span className="navbar-logo">AI Expense Tracker</span>
         <button
