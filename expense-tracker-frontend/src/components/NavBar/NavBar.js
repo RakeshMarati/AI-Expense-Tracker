@@ -24,7 +24,9 @@ const NavBar = ({ onLogout }) => {
         aria-hidden={!menuOpen}
       />
       <div className="navbar-container">
-        <span className="navbar-logo">AI Expense Tracker</span>
+        <Link to="/dashboard" className="navbar-logo" onClick={handleNavClick}>
+          AI Expense Tracker
+        </Link>
         <button
           className="navbar-hamburger"
           aria-label="Toggle navigation menu"

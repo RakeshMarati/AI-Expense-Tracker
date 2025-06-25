@@ -195,6 +195,7 @@ const ExpenseList = ({ expenses, onDeleteExpense, onModifyExpense }) => {
                       onChange={handleEditChange}
                       className="expense-edit-input"
                     >
+                      <option value="">Select</option>
                       {categories.map(cat => (
                         <option key={cat} value={cat}>{cat}</option>
                       ))}
