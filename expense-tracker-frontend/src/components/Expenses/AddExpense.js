@@ -23,7 +23,7 @@ const AddExpense = ({ onAddExpense }) => {
   const [form, setForm] = useState({
     name: "",
     amount: "",
-    category: categories[0],
+    category: "",
     date: "",
     currency: currencies[0].code
   });
@@ -32,12 +32,12 @@ const AddExpense = ({ onAddExpense }) => {
 
   const handleSubmit = e => {
     e.preventDefault();
-    if (form.name && form.amount && form.category && form.date) {
+    if (form.name && form.amount && form.category && form.date && form.category !== "") {
       onAddExpense({ ...form });
       setForm({
         name: "",
         amount: "",
-        category: categories[0],
+        category: "",
         date: "",
         currency: currencies[0].code
       });
