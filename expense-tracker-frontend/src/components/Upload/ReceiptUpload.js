@@ -30,7 +30,7 @@ const ReceiptUpload = () => {
 
     try {
       // Use your backend endpoint here
-      const res = await axios.post('http://localhost:5000/api/receipts/upload', formData, {
+      const res = await axios.post('https://ai-expense-tracker-backend-lf6w.onrender.com/api/receipts/upload', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
@@ -58,7 +58,7 @@ const ReceiptUpload = () => {
   const handleSaveExpense = async () => {
     // Save the reviewed expense to the backend
     try {
-      await axios.post('http://localhost:5000/api/expenses', form);
+      await axios.post('https://ai-expense-tracker-backend-lf6w.onrender.com/api/expenses', form);
       alert('Expense saved!');
       setExtractedData(null);
       setForm({ name: '', amount: '', date: '', category: '', currency: 'INR' });
