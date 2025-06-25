@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import API from '../../api/api';
 import './ReceiptUpload.css';
 
 const ReceiptUpload = () => {
@@ -64,7 +65,7 @@ const ReceiptUpload = () => {
     setSuccessMsg('');
     setSaveError('');
     try {
-      await axios.post('https://ai-expense-tracker-back.onrender.com/api/expenses', form);
+      await API.post('/expenses', form);
       setSuccessMsg('Expense saved successfully! Redirecting to expenses...');
       setTimeout(() => {
         navigate('/expenses');
