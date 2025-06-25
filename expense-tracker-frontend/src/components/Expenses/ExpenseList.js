@@ -48,6 +48,19 @@ const ExpenseList = ({ expenses, onDeleteExpense, onModifyExpense }) => {
 
   const grouped = groupExpenses(expenses);
 
+  // Find the most recent year and month if none are selected
+  const years = Object.keys(grouped).sort((a, b) => b - a);
+  const mostRecentYear = years[0];
+  const months = mostRecentYear ? Object.keys(grouped[mostRecentYear]).sort((a, b) => b - a) : [];
+  const mostRecentMonth = months[0];
+  const monthNames = [
+    '', 'January', 'February', 'March', 'April', 'May', 'June',
+    'July', 'August', 'September', 'October', 'November', 'December'
+  ];
+  const displayYear = openYear || mostRecentYear;
+  const displayMonth = openMonth[displayYear + mostRecentMonth] || mostRecentMonth;
+  const displayMonthName = displayMonth ? monthNames[parseInt(displayMonth, 10)] : '';
+
   const startEdit = (expense) => {
     setEditingId(expense._id || expense.id);
     setEditForm({
@@ -78,6 +91,13 @@ const ExpenseList = ({ expenses, onDeleteExpense, onModifyExpense }) => {
   return (
     <div className="expense-list-container">
       <h3 className="font-semibold mb-4 text-lg text-blue-600">Expenses</h3>
+      <h4 className="font-semibold mb-2 text-base text-indigo-700">
+        {displayMonthName && displayYear
+          ? `Showing expenses for ${displayMonthName} ${displayYear}`
+          : displayYear
+            ? `Showing expenses for ${displayYear}`
+            : 'Showing all expenses'}
+      </h4>
 
       {/* Collapsible Grouped View */}
       <div className="expense-list-grouped mb-8">
