@@ -7,11 +7,13 @@ const ReceiptUpload = () => {
   const [extractedData, setExtractedData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [form, setForm] = useState({ name: '', amount: '', date: '', category: '', currency: 'INR' });
 
   const handleFileChange = (e) => {
     setFile(e.target.files[0]);
     setExtractedData(null);
     setError('');
+    setForm({ name: '', amount: '', date: '', category: '', currency: 'INR' });
   };
 
   const handleUpload = async (e) => {
@@ -27,13 +29,20 @@ const ReceiptUpload = () => {
     formData.append('receipt', file);
 
     try {
-      // This endpoint doesn't exist yet. We will create it next.
+      // Use your backend endpoint here
       const res = await axios.post('http://localhost:5000/api/receipts/upload', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
       });
       setExtractedData(res.data);
+      setForm({
+        name: '',
+        amount: res.data.amount || '',
+        date: res.data.date || '',
+        category: res.data.category || '',
+        currency: 'INR',
+      });
     } catch (err) {
       setError('Failed to process receipt. The backend may not be running or the endpoint is missing.');
       console.error(err);
@@ -42,11 +51,22 @@ const ReceiptUpload = () => {
     }
   };
 
-  // A function to handle saving the expense (to be implemented)
-  const handleSaveExpense = () => {
-    // Here you would call your Redux action or another API to save the expense
-    console.log('Saving expense:', extractedData);
-    alert('Expense saved! (Functionality to be fully implemented)');
+  const handleFormChange = (e) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  const handleSaveExpense = async () => {
+    // Save the reviewed expense to the backend
+    try {
+      await axios.post('http://localhost:5000/api/expenses', form);
+      alert('Expense saved!');
+      setExtractedData(null);
+      setForm({ name: '', amount: '', date: '', category: '', currency: 'INR' });
+      setFile(null);
+    } catch (err) {
+      alert('Failed to save expense.');
+      console.error(err);
+    }
   };
 
   return (
@@ -79,8 +99,58 @@ const ReceiptUpload = () => {
           <h4>Extracted Details</h4>
           <p className="extracted-data-desc">Please review the extracted information before saving.</p>
           <div className="extracted-form">
-             {/* We will replace this pre with a form later */}
-            <pre>{JSON.stringify(extractedData, null, 2)}</pre>
+            <form>
+              <input
+                name="name"
+                value={form.name}
+                onChange={handleFormChange}
+                type="text"
+                placeholder="Expense Name (optional)"
+                className="extracted-input"
+              />
+              <input
+                name="amount"
+                value={form.amount}
+                onChange={handleFormChange}
+                type="number"
+                placeholder="Amount"
+                className="extracted-input"
+              />
+              <input
+                name="date"
+                value={form.date}
+                onChange={handleFormChange}
+                type="text"
+                placeholder="Date (dd/mm/yyyy)"
+                className="extracted-input"
+              />
+              <select
+                name="category"
+                value={form.category}
+                onChange={handleFormChange}
+                className="extracted-input"
+              >
+                <option value="">Select</option>
+                <option value="Food">Food</option>
+                <option value="Transport">Transport</option>
+                <option value="Shopping">Shopping</option>
+                <option value="Bills">Bills</option>
+                <option value="Entertainment">Entertainment</option>
+                <option value="Gifts">Gifts</option>
+                <option value="Medical Fees">Medical Fees</option>
+                <option value="Other">Other</option>
+              </select>
+              <select
+                name="currency"
+                value={form.currency}
+                onChange={handleFormChange}
+                className="extracted-input"
+              >
+                <option value="INR">₹ INR</option>
+                <option value="USD">$ USD</option>
+                <option value="EUR">€ EUR</option>
+              </select>
+            </form>
           </div>
           <button className="save-expense-btn" onClick={handleSaveExpense}>
             Confirm and Save Expense
