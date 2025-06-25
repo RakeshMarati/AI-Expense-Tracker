@@ -36,6 +36,17 @@
   background: linear-gradient(90deg, #3730a3 0%, #0ea5e9 100%);
 }
 
+.add-expense-form input[type="date"] {
+  min-width: 0;
+  width: 100%;
+  font-size: 1rem;
+  padding: 0.75rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.5rem;
+  background: #f3f4f6;
+  color: #22223b;
+}
+
 @media (max-width: 700px) {
   .add-expense-form {
     grid-template-columns: 1fr;
@@ -52,5 +63,11 @@
   .add-expense-form button {
     width: 100%;
     padding: 0.7rem 0;
+  }
+  .add-expense-form input[type="date"] {
+    font-size: 0.98rem;
+    padding: 0.5rem;
+    width: 100%;
+    min-width: 0;
   }
 }

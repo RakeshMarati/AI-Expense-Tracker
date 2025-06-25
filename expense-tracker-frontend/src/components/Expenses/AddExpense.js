@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 import "./AddExpense.css";
 
 const categories = [
@@ -28,7 +30,17 @@ const AddExpense = ({ onAddExpense }) => {
     currency: currencies[0].code
   });
 
+  // For react-datepicker, keep a Date object in state
+  const [dateObj, setDateObj] = useState(null);
+
   const handleChange = e => setForm({ ...form, [e.target.name]: e.target.value });
+
+  const handleDateChange = date => {
+    setDateObj(date);
+    // Format as yyyy-mm-dd for backend compatibility
+    const formatted = date ? date.toISOString().slice(0, 10) : "";
+    setForm(f => ({ ...f, date: formatted }));
+  };
 
   const handleSubmit = e => {
     e.preventDefault();
@@ -41,6 +53,7 @@ const AddExpense = ({ onAddExpense }) => {
         date: "",
         currency: currencies[0].code
       });
+      setDateObj(null);
     }
   };
 
@@ -72,13 +85,17 @@ const AddExpense = ({ onAddExpense }) => {
             <option key={cat} value={cat}>{cat}</option>
           ))}
         </select>
-        <input
-          name="date"
-          value={form.date}
-          onChange={handleChange}
-          type="date"
-          placeholder="Date"
-          style={{ minWidth: '0', width: '100%' }}
+        <DatePicker
+          selected={dateObj}
+          onChange={handleDateChange}
+          dateFormat="dd/MM/yyyy"
+          placeholderText="dd/mm/yyyy"
+          className="add-expense-datepicker"
+          maxDate={new Date()}
+          isClearable
+          showMonthDropdown
+          showYearDropdown
+          dropdownMode="select"
         />
         <select
           name="currency"
