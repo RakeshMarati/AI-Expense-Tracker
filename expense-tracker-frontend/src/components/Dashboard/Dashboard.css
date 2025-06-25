@@ -41,3 +41,14 @@
   color: #64748b;
   font-size: 1.1rem;
 }
+
+@media (max-width: 900px) {
+  .dashboard-cards {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  .dashboard-card {
+    min-height: 200px;
+    padding: 1rem;
+  }
+}

@@ -171,7 +171,7 @@ const ExpenseList = ({ expenses, onDeleteExpense, onModifyExpense }) => {
             <tr key={exp._id || exp.id}>
               {editingId === (exp._id || exp.id) ? (
                 <>
-                  <td>
+                  <td data-label="Name">
                     <input
                       name="name"
                       value={editForm.name}
@@ -179,7 +179,7 @@ const ExpenseList = ({ expenses, onDeleteExpense, onModifyExpense }) => {
                       className="expense-edit-input"
                     />
                   </td>
-                  <td>
+                  <td data-label="Amount">
                     <input
                       name="amount"
                       type="number"
@@ -188,7 +188,7 @@ const ExpenseList = ({ expenses, onDeleteExpense, onModifyExpense }) => {
                       className="expense-edit-input"
                     />
                   </td>
-                  <td>
+                  <td data-label="Category">
                     <select
                       name="category"
                       value={editForm.category}
@@ -200,7 +200,7 @@ const ExpenseList = ({ expenses, onDeleteExpense, onModifyExpense }) => {
                       ))}
                     </select>
                   </td>
-                  <td>
+                  <td data-label="Date">
                     <input
                       name="date"
                       type="date"
@@ -209,7 +209,7 @@ const ExpenseList = ({ expenses, onDeleteExpense, onModifyExpense }) => {
                       className="expense-edit-input"
                     />
                   </td>
-                  <td>
+                  <td data-label="Currency">
                     <select
                       name="currency"
                       value={editForm.currency}
@@ -221,22 +221,22 @@ const ExpenseList = ({ expenses, onDeleteExpense, onModifyExpense }) => {
                       <option value="EUR">€ EUR</option>
                     </select>
                   </td>
-                  <td>
+                  <td data-label="Actions">
                     <button className="expense-btn save-btn" onClick={() => handleEditSave(exp._id || exp.id)}>Save</button>
                     <button className="expense-btn cancel-btn" onClick={() => setEditingId(null)}>Cancel</button>
                   </td>
                 </>
               ) : (
                 <>
-                  <td>{exp.name}</td>
-                  <td className="font-semibold text-indigo-700">
+                  <td data-label="Name">{exp.name}</td>
+                  <td data-label="Amount" className="font-semibold text-indigo-700">
                     {getCurrencySymbol(exp.currency || "INR")}
                     {exp.amount}
                   </td>
-                  <td>{exp.category}</td>
-                  <td>{exp.date ? exp.date.slice(0, 10) : ""}</td>
-                  <td>{exp.currency || "INR"}</td>
-                  <td>
+                  <td data-label="Category">{exp.category}</td>
+                  <td data-label="Date">{exp.date ? exp.date.slice(0, 10) : ""}</td>
+                  <td data-label="Currency">{exp.currency || "INR"}</td>
+                  <td data-label="Actions">
                     <button className="expense-btn modify-btn" onClick={() => startEdit(exp)}>Modify</button>
                     <button className="expense-btn delete-btn" onClick={() => onDeleteExpense(exp._id || exp.id)}>Delete</button>
                   </td>

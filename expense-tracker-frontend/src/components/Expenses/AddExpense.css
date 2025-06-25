@@ -35,3 +35,22 @@
 .add-expense-form button:hover {
   background: linear-gradient(90deg, #3730a3 0%, #0ea5e9 100%);
 }
+
+@media (max-width: 700px) {
+  .add-expense-form {
+    grid-template-columns: 1fr;
+    gap: 0.7rem;
+  }
+  .add-expense-container {
+    padding: 1rem;
+  }
+  .add-expense-form input,
+  .add-expense-form select {
+    font-size: 0.98rem;
+    padding: 0.5rem;
+  }
+  .add-expense-form button {
+    width: 100%;
+    padding: 0.7rem 0;
+  }
+}
