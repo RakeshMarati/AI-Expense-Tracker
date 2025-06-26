@@ -55,14 +55,17 @@ export const extractExpenseFields = async (text) => {
     else delete extracted.amount;
   }
   if (extracted.date && typeof extracted.date === 'string') {
-    // Normalize date to YYYY-MM-DD if possible
-    const d = extracted.date.match(/(\d{2,4})[\/\-](\d{2})[\/\-](\d{2,4})/);
+    // Try to match YYYY-MM-DD or YYYY/MM/DD
+    let d = extracted.date.match(/(\d{4})[\/-](\d{2})[\/-](\d{2})/);
     if (d) {
-      // Try to format as YYYY-MM-DD
-      let y = d[1], m = d[2], day = d[3];
-      if (y.length === 2) y = '20' + y;
-      if (day.length === 4) [y, day] = [day, y];
-      extracted.date = `${y}-${m}-${day}`;
+      extracted.date = `${d[1]}-${d[2]}-${d[3]}`;
+    } else {
+      // Try to match DD-MM-YY or DD-MM-YYYY and convert
+      d = extracted.date.match(/(\d{2})[\/-](\d{2})[\/-](\d{2,4})/);
+      if (d) {
+        let year = d[3].length === 2 ? '20' + d[3] : d[3];
+        extracted.date = `${year}-${d[2]}-${d[1]}`;
+      }
     }
   }
   if (extracted.items && Array.isArray(extracted.items)) {
@@ -77,6 +80,18 @@ export const extractExpenseFields = async (text) => {
         if (!isNaN(q)) item.quantity = q;
       }
     });
+  }
+
+  // Ensure name is present
+  if (!extracted.name || extracted.name.trim() === '') {
+    // Try to use first item name if available
+    if (extracted.items && extracted.items.length > 0 && extracted.items[0].name) {
+      extracted.name = extracted.items[0].name;
+    } else if (extracted.merchant) {
+      extracted.name = extracted.merchant;
+    } else {
+      extracted.name = 'Unknown';
+    }
   }
 
   // Fallback extraction for amount/date if missing or suspicious
