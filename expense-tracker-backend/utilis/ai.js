@@ -103,5 +103,6 @@ export const extractExpenseFields = async (text) => {
     extracted.date = fallback.date;
   }
 
+  console.log('Extracted fields:', extracted);
   return extracted;
 };
