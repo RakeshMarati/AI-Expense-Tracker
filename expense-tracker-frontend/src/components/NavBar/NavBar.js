@@ -16,14 +16,14 @@ const NavBar = ({ onLogout }) => {
   const handleNavClick = () => setMenuOpen(false);
 
   return (
-    <nav className="navbar">
+  <nav className="navbar">
       {/* Overlay for mobile menu */}
       <div
         className={`navbar-overlay${menuOpen ? " open" : ""}`}
         onClick={() => setMenuOpen(false)}
         aria-hidden={!menuOpen}
       />
-      <div className="navbar-container">
+    <div className="navbar-container">
         <Link to="/dashboard" className="navbar-logo" onClick={handleNavClick}>
           AI Expense Tracker
         </Link>
@@ -42,11 +42,11 @@ const NavBar = ({ onLogout }) => {
           <Link to="/goals" className="navbar-link" onClick={handleNavClick}>Goals</Link>
           <Link to="/upload" className="navbar-link" onClick={handleNavClick}>Upload Receipt</Link>
           <button className="navbar-link logout-btn" onClick={() => { handleNavClick(); onLogout(); }}>Logout</button>
-        </div>
-        <div className="navbar-avatar">{getUserInitials()}</div>
       </div>
-    </nav>
-  );
+      <div className="navbar-avatar">{getUserInitials()}</div>
+    </div>
+  </nav>
+);
 };
 
 export default NavBar;

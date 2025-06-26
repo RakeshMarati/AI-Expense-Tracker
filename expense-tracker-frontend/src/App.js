@@ -102,7 +102,7 @@ function App() {
     }
   }
 };
-
+  
   const handleModifyExpense = async (id, updatedExpense) => {
     const token = localStorage.getItem("token");
     if (token) {
