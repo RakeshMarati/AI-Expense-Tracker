@@ -61,6 +61,12 @@ const ExpenseList = ({ expenses, onDeleteExpense, onModifyExpense }) => {
   const displayMonth = openMonth[displayYear + mostRecentMonth] || mostRecentMonth;
   const displayMonthName = displayMonth ? monthNames[parseInt(displayMonth, 10)] : '';
 
+  // Sort expenses by date descending and take the latest 10
+  const latestExpenses = [...expenses]
+    .filter(exp => exp.date)
+    .sort((a, b) => new Date(b.date) - new Date(a.date))
+    .slice(0, 10);
+
   const startEdit = (expense) => {
     setEditingId(expense._id || expense.id);
     setEditForm({
@@ -183,7 +189,7 @@ const ExpenseList = ({ expenses, onDeleteExpense, onModifyExpense }) => {
           </tr>
         </thead>
         <tbody>
-          {expenses.map(exp => (
+          {latestExpenses.map(exp => (
             <tr key={exp._id || exp.id}>
               {editingId === (exp._id || exp.id) ? (
                 <>
