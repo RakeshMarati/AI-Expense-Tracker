@@ -2,7 +2,7 @@ import axios from "axios";
 
 
 const API = axios.create({
-     baseURL: "https://ai-expense-tracker-back.onrender.com/api",
+     baseURL: "https://ai-expense-tracker-backend-lf6w.onrender.com/api",
    });
 
 // Attach token from localStorage to every request (for auto-refresh)
