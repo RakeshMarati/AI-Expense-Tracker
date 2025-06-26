@@ -5,6 +5,7 @@ export const getExpenses = async (req, res) => {
     const expenses = await Expense.find({ user: req.user.id });
     res.json(expenses);
   } catch (err) {
+    console.error('Get Expenses Error:', err);
     res.status(500).send('Server error');
   }
 };
@@ -22,6 +23,7 @@ export const addExpense = async (req, res) => {
     await expense.save();
     res.json(expense);
   } catch (err) {
+    console.error('Add Expense Error:', err);
     res.status(500).send('Server error');
   }
 };
@@ -32,7 +34,7 @@ export const deleteExpense = async (req, res) => {
     if (!expense) return res.status(404).json({ msg: 'Expense not found' });
     res.json({ msg: 'Expense deleted' });
   } catch (err) {
-    console.error(err);
+    console.error('Delete Expense Error:', err);
     res.status(500).send('Server error');
   }
 };
@@ -50,7 +52,7 @@ export const updateExpense = async (req, res) => {
     if (!expense) return res.status(404).json({ msg: 'Expense not found' });
     res.json(expense);
   } catch (err) {
-    console.error(err);
+    console.error('Update Expense Error:', err);
     res.status(500).send('Server error');
   }
 };

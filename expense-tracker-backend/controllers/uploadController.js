@@ -19,6 +19,7 @@ export const uploadReceipt = async (req, res) => {
     const extracted = await extractExpenseFields(text);
     res.json(extracted);
   } catch (err) {
+    console.error('Upload Receipt Error:', err);
     res.status(500).json({ error: 'Failed to process receipt', details: err.message });
   }
 };
