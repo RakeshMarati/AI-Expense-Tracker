@@ -42,11 +42,13 @@ const ReceiptUpload = () => {
       });
       setExtractedData(res.data);
       setForm({
-        name: '',
+        name: res.data.merchant || '',
         amount: res.data.amount || '',
         date: res.data.date || '',
         category: res.data.category || '',
-        currency: 'INR',
+        currency: res.data.currency || 'INR',
+        paymentMethod: res.data.paymentMethod || '',
+        items: res.data.items || [],
       });
     } catch (err) {
       setError('Failed to process receipt. The backend may not be running or the endpoint is missing.');
@@ -117,7 +119,7 @@ const ReceiptUpload = () => {
                 value={form.name}
                 onChange={handleFormChange}
                 type="text"
-                placeholder="Expense Name (optional)"
+                placeholder="Merchant / Vendor / Place"
                 className="extracted-input"
               />
               <input
@@ -133,7 +135,7 @@ const ReceiptUpload = () => {
                 value={form.date}
                 onChange={handleFormChange}
                 type="text"
-                placeholder="Date (dd/mm/yyyy)"
+                placeholder="Date (yyyy-mm-dd)"
                 className="extracted-input"
               />
               <select
@@ -150,6 +152,7 @@ const ReceiptUpload = () => {
                 <option value="Entertainment">Entertainment</option>
                 <option value="Gifts">Gifts</option>
                 <option value="Medical Fees">Medical Fees</option>
+                <option value="Religious">Religious</option>
                 <option value="Other">Other</option>
               </select>
               <select
@@ -162,6 +165,28 @@ const ReceiptUpload = () => {
                 <option value="USD">$ USD</option>
                 <option value="EUR">€ EUR</option>
               </select>
+              {form.paymentMethod !== undefined && (
+                <input
+                  name="paymentMethod"
+                  value={form.paymentMethod}
+                  onChange={handleFormChange}
+                  type="text"
+                  placeholder="Payment Method (optional)"
+                  className="extracted-input"
+                />
+              )}
+              {Array.isArray(form.items) && form.items.length > 0 && (
+                <div style={{ marginTop: '1rem' }}>
+                  <strong>Items:</strong>
+                  <ul>
+                    {form.items.map((item, idx) => (
+                      <li key={idx}>
+                        {item.name} - {item.quantity ? `x${item.quantity} ` : ''}{item.price ? `₹${item.price}` : ''}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
             </form>
           </div>
           <button className="save-expense-btn" onClick={handleSaveExpense} disabled={saveLoading}>
