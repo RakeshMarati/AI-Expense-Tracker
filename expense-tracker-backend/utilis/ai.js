@@ -79,11 +79,13 @@ export const extractExpenseFields = async (text) => {
     });
   }
 
-  // Fallback extraction for amount/date if missing
-  if (!extracted.amount || !extracted.date) {
-    const fallback = fallbackExtract(text);
-    if (!extracted.amount && fallback.amount) extracted.amount = fallback.amount;
-    if (!extracted.date && fallback.date) extracted.date = fallback.date;
+  // Fallback extraction for amount/date if missing or suspicious
+  const fallback = fallbackExtract(text);
+  if (!extracted.amount || (fallback.amount && fallback.amount > extracted.amount)) {
+    extracted.amount = fallback.amount;
+  }
+  if (!extracted.date && fallback.date) {
+    extracted.date = fallback.date;
   }
 
   return extracted;
