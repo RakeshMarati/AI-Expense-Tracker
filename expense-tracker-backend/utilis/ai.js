@@ -2,13 +2,21 @@
 function fallbackExtract(text) {
   let amount = null;
   let date = null;
-  // Improved regex: only 3+ digit numbers after keywords and after a colon or space
-  const totalRegex = /(?:Total Amount|PAY|Total|Amount)[^\d]{0,50}[:\s]+([0-9]{3,7}(?:\.\d{1,2})?)/gim;
+  // Try to match numbers after keywords
+  const totalRegex = /(?:Total Amount|PAY|Total|Amount)[^\d]{0,50}[:\s]*([0-9]{2,7}(?:\.\d{1,2})?)/gim;
   let match, maxAmount = 0, allAmounts = [];
   while ((match = totalRegex.exec(text)) !== null) {
     const val = parseFloat(match[1].replace(/,/g, ''));
     allAmounts.push(match[1]);
     if (!isNaN(val) && val > maxAmount) maxAmount = val;
+  }
+  // If nothing found, fallback to largest number in the text
+  if (maxAmount === 0) {
+    const allNums = text.match(/[0-9]{2,7}(?:\.\d{1,2})?/g) || [];
+    for (let n of allNums) {
+      const val = parseFloat(n.replace(/,/g, ''));
+      if (!isNaN(val) && val > maxAmount) maxAmount = val;
+    }
   }
   if (maxAmount > 0) amount = maxAmount;
   // Try to find date
