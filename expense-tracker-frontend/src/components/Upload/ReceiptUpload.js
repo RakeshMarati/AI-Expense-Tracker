@@ -35,7 +35,7 @@ const ReceiptUpload = () => {
     formData.append('receipt', file);
 
     try {
-      const res = await axios.post('https://ai-expense-tracker-back.onrender.com/api/receipts/upload', formData, {
+      const res = await API.post('/receipts/upload', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
