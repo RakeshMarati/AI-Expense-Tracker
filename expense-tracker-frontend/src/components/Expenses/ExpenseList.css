@@ -237,3 +237,58 @@
     font-size: 0.98rem;
   }
 }
+
+/* --- Recent Expenses Section --- */
+.recent-expenses-heading {
+  margin-top: 2.5rem;
+  margin-bottom: 1rem;
+  color: #059669;
+  font-size: 1.15rem;
+  letter-spacing: 0.5px;
+}
+
+.recent-expenses-table {
+  margin-bottom: 2rem;
+  margin-top: 0.5rem;
+  box-shadow: 0 2px 8px rgba(60,72,100,0.06);
+}
+
+/* Grouped Expense Item Actions */
+.grouped-expense-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding: 0.3rem 0;
+  border-bottom: 1px solid #e5e7eb;
+  font-size: 1rem;
+}
+.grouped-expense-item:last-child {
+  border-bottom: none;
+}
+.grouped-expense-item .currency-amount {
+  font-weight: 700;
+  color: #2563eb;
+  margin-left: 0.7em;
+}
+.grouped-expense-item .expense-btn {
+  margin-left: 0.4em;
+  margin-right: 0.1em;
+  padding: 0.25rem 0.7rem;
+  font-size: 0.93rem;
+}
+
+@media (max-width: 700px) {
+  .recent-expenses-heading {
+    margin-top: 1.2rem;
+    font-size: 1.02rem;
+  }
+  .recent-expenses-table {
+    font-size: 0.98rem;
+  }
+  .grouped-expense-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.2rem;
+  }
+}
