@@ -140,3 +140,83 @@ Respond in this JSON format:
   console.log('Extracted fields:', extracted);
   return extracted;
 };
+
+// Debug/test runner for local regex testing (ESM compatible)
+if (import.meta.url === `file://${process.argv[1]}`) {
+  const receiptText = `
+Magnolia Bakery
+SPAGO FOODS PVT LTD i
+F10 A, |
+Island F10.B 1st floor.
+Phoenix Mall of Asia 3HCR+244,
+239/240 Yelahanka Bengaluru 560092 |
+Mob No: 9606727455
+GSTIN : 29ABLCS8229C120
+
+FSSAI: 21223177002281
+SAC: 996339
+
+Type:Take Away Bill No.:T2-T116817
+
+Order No:5 Date :2025-06-26 11:38:08
+
+Delivery Boy: Cashier:Manager 2
+
+Covers:-
+
+Customer Detail
+
+Name: 8088168808
+
+Mobile: 8088168808
+
+Menu Item Qty Rate Amt
+LL
+Vanilla Cake
+
+with Chocolate
+
+Buttercream
+
+Cake Slice 1 240.00 240.00
+Chocolate Cake
+
+with Chocolate
+
+Buttercream
+
+Cake Slice il 240.00 240.00
+CLASSIC TRES
+
+LECHES 2 390.00 780.00
+Eggless
+
+Classic Tres
+
+Leches 1 410.00 410.00
+
+Total Qty 5
+SubTotal: 1670.00
+GSTWE18% 300.60
+
+CGST @9% 150230
+SGST 09% 150.30
+Round Off: 0.40
+Total Amount: 1971
+PAY:1971
+
+Payment Detail:
+a mE
+Other 1971.00
+Ea i
+Amount 1971
+
+Name Phonepe Static Qr
+
+Comment :
+hae visit again!
+PE CT —_—
+`;
+  const result = fallbackExtract(receiptText);
+  console.log('Test fallbackExtract result:', result);
+}
