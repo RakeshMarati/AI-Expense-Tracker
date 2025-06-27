@@ -1,14 +1,16 @@
 .dashboard-container {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 2rem 1rem;
+  padding: 2.5rem 1.5rem;
+  background: #f3f4f6;
+  min-height: 100vh;
 }
 
 .dashboard-title {
   font-size: 2.5rem;
-  font-weight: 800;
-  color: #3730a3;
-  margin-bottom: 2rem;
+  font-weight: 900;
+  color: #23272f;
+  margin-bottom: 2.5rem;
   text-align: center;
   letter-spacing: -1px;
 }
@@ -20,26 +22,45 @@
 }
 
 .dashboard-card {
-  background: rgba(255,255,255,0.97);
+  background: #fff;
   border-radius: 1.5rem;
-  box-shadow: 0 4px 24px rgba(60,72,100,0.10);
+  box-shadow: 0 4px 24px rgba(60,72,100,0.08);
+  border: 1px solid #e5e7eb;
   padding: 2rem;
   min-height: 350px;
   display: flex;
   flex-direction: column;
   align-items: center;
+  transition: box-shadow 0.2s, border 0.2s;
+}
+
+.dashboard-card:hover {
+  box-shadow: 0 8px 32px rgba(60,72,100,0.13);
+  border: 1.5px solid #2563eb;
 }
 
 .dashboard-card h3 {
-  color: #6366f1;
+  color: #2563eb;
   font-size: 1.3rem;
-  font-weight: 700;
+  font-weight: 800;
   margin-bottom: 1.5rem;
+  letter-spacing: -0.5px;
 }
 
 .dashboard-subtext {
-  color: #64748b;
+  color: #6b7280;
   font-size: 1.1rem;
+  font-weight: 500;
+}
+
+.goals-status {
+  background: #f3f4f6;
+  color: #2563eb;
+  font-weight: 700;
+  padding: 0.2rem 0.7rem;
+  border-radius: 999px;
+  font-size: 0.95rem;
+  margin-left: 0.5rem;
 }
 
 @media (max-width: 900px) {

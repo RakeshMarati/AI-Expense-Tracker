@@ -2,7 +2,22 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Custom nav-link style for navigation */
+body {
+  font-family: 'Inter', system-ui, Arial, sans-serif;
+  @apply font-sans antialiased;
+  min-height: 100vh;
+  background: linear-gradient(120deg, #f3f4f6 0%, #e0e7ef 60%, #e3eafc 100%);
+  color: #4B5563;
+  font-weight: 400;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: #23272f;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+}
+
+/* Updated nav-link style for modern neutral theme */
 .nav-link {
-  @apply text-gray-700 hover:text-indigo-600 font-medium transition-colors duration-200;
+  @apply text-gray-700 hover:text-gray-900 font-semibold transition-colors duration-200;
 }

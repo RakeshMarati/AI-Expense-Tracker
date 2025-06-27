@@ -1,7 +1,8 @@
 .add-expense-container {
-  background: rgba(255,255,255,0.97);
+  background: #fff;
   border-radius: 1.5rem;
-  box-shadow: 0 4px 24px rgba(60,72,100,0.10);
+  box-shadow: 0 4px 24px rgba(60,72,100,0.08);
+  border: 1px solid #e5e7eb;
   padding: 2rem;
   margin-top: 2rem;
 }
@@ -19,32 +20,51 @@
   padding: 0.75rem;
   background: #f3f4f6;
   font-size: 1rem;
+  color: #23272f;
+  font-weight: 500;
+  transition: border 0.2s, box-shadow 0.2s;
+}
+
+.add-expense-form input:focus,
+.add-expense-form select:focus {
+  border: 1.5px solid #2563eb;
+  outline: none;
+  box-shadow: 0 0 0 2px #dbeafe;
 }
 
 .add-expense-form button {
-  background: linear-gradient(90deg, #6366f1 0%, #06b6d4 100%);
+  background: #2563eb;
   color: #fff;
-  font-weight: 600;
+  font-weight: 700;
   border: none;
   border-radius: 0.5rem;
   padding: 0.75rem 1.5rem;
   cursor: pointer;
-  transition: background 0.2s;
+  transition: background 0.2s, box-shadow 0.2s;
+  box-shadow: 0 2px 8px rgba(37,99,235,0.08);
+  font-size: 1.05rem;
+  letter-spacing: 0.5px;
 }
 
 .add-expense-form button:hover {
-  background: linear-gradient(90deg, #3730a3 0%, #0ea5e9 100%);
+  background: #1d4ed8;
 }
 
-.add-expense-form input[type="date"] {
-  min-width: 0;
-  width: 100%;
-  font-size: 1rem;
-  padding: 0.75rem;
+.add-expense-datepicker {
   border: 1px solid #e5e7eb;
   border-radius: 0.5rem;
+  padding: 0.75rem;
   background: #f3f4f6;
-  color: #22223b;
+  font-size: 1rem;
+  color: #23272f;
+  width: 100%;
+  transition: border 0.2s, box-shadow 0.2s;
+}
+
+.add-expense-datepicker:focus {
+  border: 1.5px solid #2563eb;
+  outline: none;
+  box-shadow: 0 0 0 2px #dbeafe;
 }
 
 @media (max-width: 700px) {
@@ -64,10 +84,9 @@
     width: 100%;
     padding: 0.7rem 0;
   }
-  .add-expense-form input[type="date"] {
+  .add-expense-datepicker {
     font-size: 0.98rem;
     padding: 0.5rem;
     width: 100%;
-    min-width: 0;
   }
 }

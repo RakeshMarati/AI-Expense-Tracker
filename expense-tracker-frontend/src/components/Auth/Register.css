@@ -1,18 +1,20 @@
 .register-container {
   max-width: 400px;
   margin: 4rem auto;
-  background: rgba(255,255,255,0.97);
+  background: #fff;
   border-radius: 1.5rem;
-  box-shadow: 0 4px 24px rgba(60,72,100,0.10);
+  box-shadow: 0 4px 24px rgba(60,72,100,0.08);
+  border: 1px solid #e5e7eb;
   padding: 2.5rem 2rem;
   text-align: center;
 }
 
 .register-title {
   font-size: 2rem;
-  font-weight: 800;
-  color: #6366f1;
+  font-weight: 900;
+  color: #23272f;
   margin-bottom: 2rem;
+  letter-spacing: -1px;
 }
 
 .register-form {
@@ -27,33 +29,47 @@
   padding: 0.9rem;
   background: #f3f4f6;
   font-size: 1rem;
+  color: #23272f;
+  font-weight: 500;
+  transition: border 0.2s, box-shadow 0.2s;
+}
+.register-input:focus {
+  border: 1.5px solid #2563eb;
+  outline: none;
+  box-shadow: 0 0 0 2px #dbeafe;
 }
 
 .register-btn {
-  background: linear-gradient(90deg, #6366f1 0%, #06b6d4 100%);
+  background: #2563eb;
   color: #fff;
-  font-weight: 600;
+  font-weight: 700;
   border: none;
   border-radius: 0.5rem;
   padding: 0.9rem 0;
   cursor: pointer;
   font-size: 1.1rem;
-  transition: background 0.2s;
+  transition: background 0.2s, box-shadow 0.2s;
+  box-shadow: 0 2px 8px rgba(37,99,235,0.08);
+  letter-spacing: 0.5px;
 }
 
 .register-btn:hover {
-  background: linear-gradient(90deg, #3730a3 0%, #0ea5e9 100%);
+  background: #1d4ed8;
 }
 
 .register-link {
-  color: #6366f1;
-  font-weight: 500;
+  color: #2563eb;
+  font-weight: 600;
   text-decoration: none;
   margin-left: 0.3rem;
+  transition: color 0.2s;
+}
+.register-link:hover {
+  color: #1d4ed8;
 }
 
 .register-error {
-  color: #ef4444;
+  color: #e11d48;
   margin-top: 0.5rem;
   font-size: 1rem;
 }

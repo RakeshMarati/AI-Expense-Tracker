@@ -1,7 +1,8 @@
 .expense-list-container {
-  background: rgba(255,255,255,0.97);
+  background: #fff;
   border-radius: 1.5rem;
-  box-shadow: 0 4px 24px rgba(60,72,100,0.10);
+  box-shadow: 0 4px 24px rgba(60,72,100,0.08);
+  border: 1px solid #e5e7eb;
   padding: 2rem;
   margin-top: 2rem;
 }
@@ -13,9 +14,9 @@
   justify-content: space-between;
   align-items: center;
   padding: 0.75rem 1rem;
-  background: #f0f7ff;
-  color: #1d4ed8;
-  font-weight: 600;
+  background: #f3f4f6;
+  color: #2563eb;
+  font-weight: 700;
   border: none;
   border-radius: 0.5rem;
   margin-bottom: 0.25rem;
@@ -25,16 +26,16 @@
 }
 .accordion-btn:hover,
 .accordion-btn:focus {
-  background: #e0eaff;
+  background: #e5e7eb;
 }
 
 .accordion-btn.month {
-  background: #eef2ff;
-  color: #4338ca;
+  background: #f7f7fa;
+  color: #2563eb;
 }
 .accordion-btn.month:hover,
 .accordion-btn.month:focus {
-  background: #e0e7ff;
+  background: #e5e7eb;
 }
 
 .accordion-btn svg {
@@ -52,22 +53,22 @@
   align-items: center;
   gap: 0.5rem;
   padding: 0.5rem 1rem;
-  background: #f9fafb;
+  background: #f7f7fa;
   border-radius: 0.5rem;
-  color: #374151;
+  color: #23272f;
   font-weight: 500;
   margin-bottom: 0.25rem;
 }
 
 .day-summary .date {
-  font-weight: 600;
-  color: #6366f1;
+  font-weight: 700;
+  color: #2563eb;
 }
 
 .day-summary .amount {
   margin-left: auto;
-  font-weight: 700;
-  color: #10b981;
+  font-weight: 800;
+  color: #059669;
 }
 
 .expense-list-grouped ul {
@@ -91,7 +92,7 @@
 }
 
 .expense-list-grouped .category {
-  color: #9ca3af;
+  color: #6b7280;
   font-size: 0.9em;
   margin-left: 0.5em;
 }
@@ -100,6 +101,11 @@
 .expense-table {
   width: 100%;
   border-collapse: collapse;
+  background: #fff;
+  border-radius: 1rem;
+  overflow: hidden;
+  margin-top: 2rem;
+  box-shadow: 0 2px 8px rgba(60,72,100,0.06);
 }
 
 .expense-table th, .expense-table td {
@@ -108,61 +114,72 @@
 }
 
 .expense-table th {
-  color: #6366f1;
-  font-weight: 700;
+  color: #2563eb;
+  font-weight: 800;
   background: #f3f4f6;
+  border-bottom: 1.5px solid #e5e7eb;
 }
 
 .expense-table tr:nth-child(even) {
-  background: #f9fafb;
+  background: #f7f7fa;
+}
+
+.expense-table tr {
+  transition: background 0.2s;
+}
+
+.expense-table tr:hover {
+  background: #e5e7eb;
 }
 
 /* Button Styles */
 .expense-btn {
   margin-right: 0.5rem;
-  background: linear-gradient(90deg, #6366f1 0%, #06b6d4 100%);
+  background: #2563eb;
   color: #fff;
-  font-weight: 600;
+  font-weight: 700;
   border: none;
   border-radius: 0.5rem;
   padding: 0.4rem 1rem;
   cursor: pointer;
   transition: background 0.2s, box-shadow 0.2s;
   font-size: 0.95rem;
-  box-shadow: 0 2px 8px rgba(99,102,241,0.08);
+  box-shadow: 0 2px 8px rgba(37,99,235,0.08);
 }
 
 .expense-btn:hover {
-  background: linear-gradient(90deg, #3730a3 0%, #0ea5e9 100%);
+  background: #1d4ed8;
 }
 
 .delete-btn {
-  background: linear-gradient(90deg, #ef4444 0%, #f59e42 100%);
+  background: #e11d48;
 }
 .delete-btn:hover {
-  background: linear-gradient(90deg, #b91c1c 0%, #ea580c 100%);
+  background: #b91c1c;
 }
 
 .modify-btn {
-  background: linear-gradient(90deg, #f59e42 0%, #6366f1 100%);
+  background: #f59e42;
+  color: #23272f;
 }
 .modify-btn:hover {
-  background: linear-gradient(90deg, #ea580c 0%, #3730a3 100%);
+  background: #ea580c;
+  color: #fff;
 }
 
 .save-btn {
-  background: linear-gradient(90deg, #10b981 0%, #6366f1 100%);
+  background: #059669;
 }
 .save-btn:hover {
-  background: linear-gradient(90deg, #059669 0%, #3730a3 100%);
+  background: #047857;
 }
 
 .cancel-btn {
-  background: linear-gradient(90deg, #64748b 0%, #f3f4f6 100%);
-  color: #22223b;
+  background: #6b7280;
+  color: #fff;
 }
 .cancel-btn:hover {
-  background: linear-gradient(90deg, #334155 0%, #e5e7eb 100%);
+  background: #374151;
 }
 
 .expense-edit-input {
@@ -170,12 +187,14 @@
   border-radius: 0.5rem;
   padding: 0.4rem;
   font-size: 1rem;
+  background: #f3f4f6;
+  color: #23272f;
 }
 
 /* Total Expenses Card */
 .total-expense-card {
   margin-top: 2rem;
-  background: linear-gradient(90deg, #6366f1 0%, #06b6d4 100%);
+  background: #2563eb;
   color: #fff;
   border-radius: 1rem;
   box-shadow: 0 4px 24px rgba(60,72,100,0.10);
@@ -198,92 +217,23 @@
   border-radius: 0.7rem;
   font-size: 1.4rem;
   font-weight: 800;
-  color: #fff;
-  box-shadow: 0 2px 8px rgba(99,102,241,0.08);
 }
 
-/* Arrow rotation for accordion */
-.rotate {
-  transform: rotate(90deg);
-  transition: transform 0.2s;
-}
-
-/* Responsive tweaks */
+/* Responsive Styles */
 @media (max-width: 900px) {
   .expense-table th, .expense-table td {
-    padding: 0.4rem 0.2rem;
-    font-size: 0.95rem;
+    padding: 0.5rem 0.5rem;
+  }
+  .expense-list-container {
+    padding: 1rem;
   }
 }
+
 @media (max-width: 600px) {
   .expense-list-container {
     padding: 0.5rem;
   }
   .expense-table {
-    display: block;
-    width: 100%;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    background: transparent;
-  }
-  .expense-table thead {
-    display: none;
-  }
-  .expense-table tbody {
-    display: block;
-    width: 100%;
-  }
-  .expense-table tr {
-    display: block;
-    margin-bottom: 1.2rem;
-    border-radius: 0.7rem;
-    box-shadow: 0 2px 8px rgba(60,72,100,0.07);
-    background: #fff;
-    padding: 0.7rem 0.5rem;
-  }
-  .expense-table td {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
-    padding: 0.6rem 0.3rem;
-    border: none;
-    border-bottom: 1px solid #f3f4f6;
-    font-size: 1rem;
-    background: none;
-    min-height: 2.2rem;
-  }
-  .expense-table td:last-child {
-    border-bottom: none;
-  }
-  .expense-table td:before {
-    content: attr(data-label);
-    font-weight: 600;
-    color: #6366f1;
-    flex: 1 0 45%;
-    text-align: left;
-    font-size: 0.98em;
-    padding-right: 0.5rem;
-  }
-  .expense-edit-input,
-  .expense-btn {
-    width: 100%;
-    box-sizing: border-box;
-    font-size: 1rem;
-    margin-bottom: 0.3rem;
-  }
-  .expense-btn {
-    margin-right: 0;
-    margin-bottom: 0.3rem;
-  }
-  .expense-btn:last-child {
-    margin-bottom: 0;
-  }
-  .total-expense-card {
-    padding: 0.7rem 0.5rem;
-    font-size: 1rem;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0.5rem;
+    font-size: 0.98rem;
   }
 }

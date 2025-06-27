@@ -91,14 +91,8 @@ const Goals = () => {
                 </form>
               ) : (
                 <>
-                  <span>{goal.description}</span>
+                  <span className="goal-desc">{goal.description}</span>
                   <span className="goals-status">
-                    Target: {goal.currency} {goal.targetAmount}{" "}
-                    {goal.deadline && (
-                      <span style={{ color: "#64748b", fontSize: "0.95em" }}>
-                        | Deadline: {goal.deadline.slice(0, 10)}
-                      </span>
-                    )}
                     <span className={`goal-status-badge ${goal.status?.toLowerCase().replace(' ', '-')}`}>
                       {goal.status}
                     </span>
