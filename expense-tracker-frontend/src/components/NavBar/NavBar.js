@@ -24,9 +24,11 @@ const NavBar = ({ onLogout }) => {
         aria-hidden={!menuOpen}
       />
     <div className="navbar-container">
-        <Link to="/dashboard" className="navbar-logo" onClick={handleNavClick}>
-          AI Expense Tracker
-        </Link>
+      <Link to="/dashboard" className="navbar-logo" onClick={handleNavClick}>
+        AI Expense Tracker
+      </Link>
+      <div className="navbar-actions">
+        <div className="navbar-avatar">{getUserInitials()}</div>
         <button
           className="navbar-hamburger"
           aria-label="Toggle navigation menu"
@@ -36,14 +38,14 @@ const NavBar = ({ onLogout }) => {
           <span className="hamburger-bar" />
           <span className="hamburger-bar" />
         </button>
-        <div className={`navbar-links${menuOpen ? " open" : ""}`}>
-          <Link to="/dashboard" className="navbar-link" onClick={handleNavClick}>Dashboard</Link>
-          <Link to="/expenses" className="navbar-link" onClick={handleNavClick}>Expenses</Link>
-          <Link to="/goals" className="navbar-link" onClick={handleNavClick}>Goals</Link>
-          <Link to="/upload" className="navbar-link" onClick={handleNavClick}>Upload Receipt</Link>
-          <button className="navbar-link logout-btn" onClick={() => { handleNavClick(); onLogout(); }}>Logout</button>
       </div>
-      <div className="navbar-avatar">{getUserInitials()}</div>
+      <div className={`navbar-links${menuOpen ? " open" : ""}`}>
+        <Link to="/dashboard" className="navbar-link" onClick={handleNavClick}>Dashboard</Link>
+        <Link to="/expenses" className="navbar-link" onClick={handleNavClick}>Expenses</Link>
+        <Link to="/goals" className="navbar-link" onClick={handleNavClick}>Goals</Link>
+        <Link to="/upload" className="navbar-link" onClick={handleNavClick}>Upload Receipt</Link>
+        <button className="navbar-link logout-btn" onClick={() => { handleNavClick(); onLogout(); }}>Logout</button>
+      </div>
     </div>
   </nav>
 );

@@ -115,6 +115,15 @@
   z-index: 9;
 }
 
+.navbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-left: auto;
+  position: relative;
+  z-index: 22;
+}
+
 @media (max-width: 700px) {
   .navbar-container {
     flex-direction: row;
@@ -162,10 +171,14 @@
     display: flex !important;
   }
   .navbar-avatar {
-    position: absolute;
-    right: 1.2rem;
-    top: 0.7rem;
-    z-index: 21;
+    position: static;
+    right: unset;
+    top: unset;
+    margin-left: 0;
+  }
+  .navbar-actions {
+    margin-left: 0.5rem;
+    gap: 0.5rem;
   }
 }
 
