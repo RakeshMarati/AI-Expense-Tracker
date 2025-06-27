@@ -10,8 +10,8 @@ export const categorizeExpense = async (text) => {
 function fallbackExtract(text) {
   let amount = null;
   let date = null;
-  // Bulletproof: Find numbers after 'Total Amount', 'PAY', or 'Total' (allowing for line breaks and spaces)
-  const totalRegex = /(?:Total Amount|PAY|Total)[^\d]{0,50}([0-9]{2,6}(?:\.\d{1,2})?)/gim;
+  // Improved regex: only 3+ digit numbers after keywords and after a colon or space
+  const totalRegex = /(?:Total Amount|PAY|Total|Amount)[^\d]{0,50}[:\s]+([0-9]{3,7}(?:\.\d{1,2})?)/gim;
   let match, maxAmount = 0, allAmounts = [];
   while ((match = totalRegex.exec(text)) !== null) {
     const val = parseFloat(match[1].replace(/,/g, ''));
