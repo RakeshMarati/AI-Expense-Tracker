@@ -13,6 +13,13 @@ dotenv.config();
 connectDB();
 
 const app = express();
+
+// Logging middleware for debugging CORS issues
+app.use((req, res, next) => {
+  console.log('Request origin:', req.headers.origin, 'Path:', req.path, 'Method:', req.method);
+  next();
+});
+
 app.use(cors({
   origin: [
     'https://ai-expense-tracker-7amg.vercel.app',
