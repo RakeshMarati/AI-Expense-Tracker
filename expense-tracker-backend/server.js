@@ -20,19 +20,29 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use(cors({
-  origin: [
-    'https://ai-expense-tracker-7amg.vercel.app',
-    'https://ai-expense-tracker-7am-git-3df9dd-rakesh-kumar-maratis-projects.vercel.app',
-    'http://localhost:3000'
-  ],
+const allowedOrigins = [
+  'https://ai-expense-tracker-7amg.vercel.app',
+  'https://ai-expense-tracker-7am-git-3df9dd-rakesh-kumar-maratis-projects.vercel.app',
+  'https://ai-expense-tracker-gray.vercel.app',
+  'http://localhost:3000'
+];
+
+const corsOptions = {
+  origin: function (origin, callback) {
+    console.log('CORS check for origin:', origin);
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
-}));
+};
 
-// Explicitly handle preflight requests
-app.options('*', cors());
+app.use(cors(corsOptions));
+app.options('*', cors(corsOptions));
 app.use(express.json());
 app.use('/uploads', express.static('uploads'));
 
