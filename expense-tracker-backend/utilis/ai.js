@@ -130,14 +130,26 @@ Respond in this JSON format:
 
   // Fallback extraction for amount/date if missing or suspicious
   const fallback = fallbackExtract(text);
-  if (!extracted.amount || (fallback.amount && fallback.amount > extracted.amount)) {
-    extracted.amount = fallback.amount;
+  const openaiAmount = Number(extracted.amount);
+  const fallbackAmount = Number(fallback.amount);
+  console.log('OpenAI extracted amount:', openaiAmount);
+  console.log('Fallback extracted amount:', fallbackAmount);
+
+  // Always use fallback if it is present and >= OpenAI amount, or if OpenAI amount is missing/invalid
+  if ((fallbackAmount && (!openaiAmount || fallbackAmount >= openaiAmount))) {
+    extracted.amount = fallbackAmount;
+    console.log('Using fallback amount:', fallbackAmount);
+  } else {
+    console.log('Using OpenAI amount:', openaiAmount);
   }
+
   if (!extracted.date && fallback.date) {
     extracted.date = fallback.date;
   }
 
-  console.log('Extracted fields:', extracted);
+  console.log('Extracted fields (final):', extracted);
+  // For debugging, return both values
+  extracted._debug = { openaiAmount, fallbackAmount };
   return extracted;
 };
 
