@@ -1,16 +1,7 @@
-import OpenAI from 'openai';
-
-// Placeholder for AI integration (OpenAI/Google Vision API)
-export const categorizeExpense = async (text) => {
-  // Call AI API here
-  return "Food"; // Example
-};
-
 // Helper: fallback regex extraction for amount and date
 function fallbackExtract(text) {
   let amount = null;
   let date = null;
-  // Improved regex: only 3+ digit numbers after keywords and after a colon or space
   const totalRegex = /(?:Total Amount|PAY|Total|Amount)[^\d]{0,50}[:\s]+([0-9]{3,7}(?:\.\d{1,2})?)/gim;
   let match, maxAmount = 0, allAmounts = [];
   while ((match = totalRegex.exec(text)) !== null) {
@@ -21,7 +12,6 @@ function fallbackExtract(text) {
   if (maxAmount > 0) amount = maxAmount;
   console.log('All matched amounts:', allAmounts);
   console.log('Max amount:', maxAmount);
-  // Try to find date
   const dateMatch = text.match(/(\d{4}[\/-]\d{2}[\/-]\d{2})/) || text.match(/(\d{2}[\/-]\d{2}[\/-]\d{2,4})/);
   if (dateMatch) date = dateMatch[1];
   return { amount, date };
@@ -54,7 +44,7 @@ function guessCategory(text) {
   return 'Other';
 }
 
-// Extract structured expense fields using OpenAI
+// Extract structured expense fields using fallback only (no OpenAI)
 export const extractExpenseFields = async (text) => {
   const fallback = fallbackExtract(text);
 
