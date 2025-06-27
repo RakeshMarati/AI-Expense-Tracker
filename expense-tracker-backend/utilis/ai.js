@@ -10,10 +10,17 @@ export const categorizeExpense = async (text) => {
 function fallbackExtract(text) {
   let amount = null;
   let date = null;
-  // Improved: Find all numbers after 'Total Amount', 'PAY', or 'Total' (up to 4 digits before decimal)
-  const totalRegex = /(?:Total Amount|PAY|Total)[:=]?\s*([0-9]{1,4}(?:\.\d{1,2})?)/gi;
+  // Improved: Find all numbers after 'Total Amount', 'PAY', or 'Total' (up to 5 digits before decimal)
+  const totalRegex = /(?:Total Amount|PAY|Total)[:=]?\s*([0-9]{1,5}(?:\.\d{1,2})?)/gi;
   let match, maxAmount = 0, allAmounts = [];
   while ((match = totalRegex.exec(text)) !== null) {
+    const val = parseFloat(match[1].replace(/,/g, ''));
+    allAmounts.push(match[1]);
+    if (!isNaN(val) && val > maxAmount) maxAmount = val;
+  }
+  // Also, try to match numbers at the end of lines with 'Total Amount' or 'PAY'
+  const endLineRegex = /(?:Total Amount|PAY)[:=]?\s*([0-9]{1,5}(?:\.\d{1,2})?)$/gim;
+  while ((match = endLineRegex.exec(text)) !== null) {
     const val = parseFloat(match[1].replace(/,/g, ''));
     allAmounts.push(match[1]);
     if (!isNaN(val) && val > maxAmount) maxAmount = val;
