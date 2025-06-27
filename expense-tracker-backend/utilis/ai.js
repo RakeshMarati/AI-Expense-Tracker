@@ -10,23 +10,17 @@ export const categorizeExpense = async (text) => {
 function fallbackExtract(text) {
   let amount = null;
   let date = null;
-  // Improved: Find all numbers after 'Total Amount', 'PAY', or 'Total' (up to 5 digits before decimal)
-  const totalRegex = /(?:Total Amount|PAY|Total)[:=]?\s*([0-9]{1,5}(?:\.\d{1,2})?)/gi;
+  // Bulletproof: Find numbers after 'Total Amount', 'PAY', or 'Total' (allowing for line breaks and spaces)
+  const totalRegex = /(?:Total Amount|PAY|Total)[^\d]{0,50}([0-9]{2,6}(?:\.\d{1,2})?)/gim;
   let match, maxAmount = 0, allAmounts = [];
   while ((match = totalRegex.exec(text)) !== null) {
     const val = parseFloat(match[1].replace(/,/g, ''));
     allAmounts.push(match[1]);
     if (!isNaN(val) && val > maxAmount) maxAmount = val;
   }
-  // Also, try to match numbers at the end of lines with 'Total Amount' or 'PAY'
-  const endLineRegex = /(?:Total Amount|PAY)[:=]?\s*([0-9]{1,5}(?:\.\d{1,2})?)$/gim;
-  while ((match = endLineRegex.exec(text)) !== null) {
-    const val = parseFloat(match[1].replace(/,/g, ''));
-    allAmounts.push(match[1]);
-    if (!isNaN(val) && val > maxAmount) maxAmount = val;
-  }
   if (maxAmount > 0) amount = maxAmount;
   console.log('All matched amounts:', allAmounts);
+  console.log('Max amount:', maxAmount);
   // Try to find date
   const dateMatch = text.match(/(\d{4}[\/-]\d{2}[\/-]\d{2})/) || text.match(/(\d{2}[\/-]\d{2}[\/-]\d{2,4})/);
   if (dateMatch) date = dateMatch[1];
