@@ -10,8 +10,8 @@ export const categorizeExpense = async (text) => {
 function fallbackExtract(text) {
   let amount = null;
   let date = null;
-  // Improved: Find the largest number after 'Total Amount', 'PAY', or 'Total'
-  const totalRegex = /(?:Total Amount|PAY|Total)[:=]?\s*([\d.,]+)/gi;
+  // Improved: Find all numbers after 'Total Amount', 'PAY', or 'Total' (up to 4 digits before decimal)
+  const totalRegex = /(?:Total Amount|PAY|Total)[:=]?\s*([0-9]{1,4}(?:\.\d{1,2})?)/gi;
   let match, maxAmount = 0, allAmounts = [];
   while ((match = totalRegex.exec(text)) !== null) {
     const val = parseFloat(match[1].replace(/,/g, ''));
