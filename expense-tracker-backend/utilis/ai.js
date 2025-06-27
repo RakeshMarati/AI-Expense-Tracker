@@ -16,7 +16,7 @@ function fallbackExtract(text) {
     amount = Math.max(...allAmounts.map(m => parseFloat(m[1].replace(/,/g, ''))));
   }
   // Try to find date
-  const dateMatch = text.match(/(\d{4}[\/\-]\d{2}[\/\-]\d{2})/) || text.match(/(\d{2}[\/\-]\d{2}[\/\-]\d{2,4})/);
+  const dateMatch = text.match(/(\d{4}[\/-]\d{2}[\/-]\d{2})/) || text.match(/(\d{2}[\/-]\d{2}[\/-]\d{2,4})/);
   if (dateMatch) date = dateMatch[1];
   return { amount, date };
 }
@@ -27,7 +27,31 @@ export const extractExpenseFields = async (text) => {
     apiKey: process.env.OPENAI_API_KEY,
   });
 
-  const prompt = `You are an intelligent assistant for an AI-based Expense Tracker.\n\nExtract the following fields from the provided receipt or bill text. Use keyword recognition (e.g., \"Date\", \"Total\", \"Amount\", \"Paid by\", \"To\", etc.) and layout analysis. Only return fields you are confident about; if a field is missing or unclear, return null or omit it. Output only valid JSON.\n\nFields:\n- merchant (vendor/place)\n- date (date of transaction)\n- amount (total amount)\n- currency (₹, $, etc.)\n- items (list of item names, prices, and quantities if available)\n- paymentMethod (e.g., Credit Card, UPI, Cash)\n- category (purpose, e.g., Food, Travel, Utilities)\n\nText:\n\"\"\"\n${text}\n\"\"\"`;
+  const prompt = `Extract the following fields from this receipt or bill text:
+- merchant (store/restaurant name or biller)
+- address (if available)
+- date (YYYY-MM-DD)
+- total amount (numeric)
+- payment method (e.g., cash, card, UPI, etc.)
+- category (guess from context, e.g., Food, Shopping, Electricity, Internet, etc.)
+- items (list of {name, quantity, price}) — only if this is a shopping or food receipt; omit for bills like electricity, internet, rent, etc.
+
+Receipt text:
+"""
+${text}
+"""
+
+Respond in this JSON format:
+{
+  "name": "",
+  "amount": "",
+  "date": "",
+  "category": "",
+  "items": [], // omit or leave empty for bills
+  "paymentMethod": "",
+  "merchant": "",
+  "address": ""
+}`;
 
   const response = await openai.chat.completions.create({
     model: 'gpt-3.5-turbo',
@@ -35,15 +59,19 @@ export const extractExpenseFields = async (text) => {
       { role: 'system', content: 'You are an assistant that extracts structured expense data from receipts, bills, or invoices.' },
       { role: 'user', content: prompt }
     ],
-    temperature: 0,
+    temperature: 0.1,
     max_tokens: 500,
   });
 
   // Try to parse the response as JSON
   let extracted;
   try {
-    const jsonString = response.choices[0].message.content.trim();
-    extracted = JSON.parse(jsonString);
+    const match = response.choices[0].message.content.match(/\{[\s\S]*\}/);
+    if (match) {
+      extracted = JSON.parse(match[0]);
+    } else {
+      throw new Error('No JSON found in AI response');
+    }
   } catch (err) {
     return { error: 'Failed to parse OpenAI response', details: err.message, raw: response.choices[0].message.content };
   }

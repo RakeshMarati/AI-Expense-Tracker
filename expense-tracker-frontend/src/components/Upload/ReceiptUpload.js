@@ -62,12 +62,30 @@ const ReceiptUpload = () => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
+  // Helper to fix date format to YYYY-MM-DD
+  function fixDateFormat(dateStr) {
+    if (/^\d{2}-\d{2}-\d{2}$/.test(dateStr)) {
+      const [yy, mm, dd] = dateStr.split("-");
+      return `20${yy}-${mm}-${dd}`;
+    }
+    if (/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) {
+      return dateStr;
+    }
+    return "";
+  }
+
   const handleSaveExpense = async () => {
     setSaveLoading(true);
     setSuccessMsg('');
     setSaveError('');
     try {
-      await API.post('/expenses', form);
+      // Fix date and name before sending
+      const fixedForm = {
+        ...form,
+        date: fixDateFormat(form.date),
+        name: form.name || extractedData?.merchant || "Unknown Expense"
+      };
+      await API.post('/expenses', fixedForm);
       setSuccessMsg('Expense saved successfully! Redirecting to expenses...');
       setTimeout(() => {
         navigate('/expenses');
@@ -112,6 +130,43 @@ const ReceiptUpload = () => {
         <div className="extracted-data-card">
           <h4>Extracted Details</h4>
           <p className="extracted-data-desc">Please review the extracted information before saving.</p>
+
+          {/* Preview in expenses list format */}
+          <table className="expense-table" style={{ marginBottom: '1rem' }}>
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Amount</th>
+                <th>Category</th>
+                <th>Date</th>
+                <th>Payment Method</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>{form.name}</td>
+                <td>{form.amount}</td>
+                <td>{form.category}</td>
+                <td>{form.date}</td>
+                <td>{form.paymentMethod}</td>
+              </tr>
+            </tbody>
+          </table>
+
+          {/* Only show items if present and non-empty */}
+          {Array.isArray(form.items) && form.items.length > 0 && (
+            <div style={{ marginTop: '1rem' }}>
+              <strong>Items:</strong>
+              <ul>
+                {form.items.map((item, idx) => (
+                  <li key={idx}>
+                    {item.name} - Qty: {item.quantity} - Price: {item.price}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+
           <div className="extracted-form">
             <form>
               <input
@@ -174,18 +229,6 @@ const ReceiptUpload = () => {
                   placeholder="Payment Method (optional)"
                   className="extracted-input"
                 />
-              )}
-              {Array.isArray(form.items) && form.items.length > 0 && (
-                <div style={{ marginTop: '1rem' }}>
-                  <strong>Items:</strong>
-                  <ul>
-                    {form.items.map((item, idx) => (
-                      <li key={idx}>
-                        {item.name} - {item.quantity ? `x${item.quantity} ` : ''}{item.price ? `₹${item.price}` : ''}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
               )}
             </form>
           </div>
