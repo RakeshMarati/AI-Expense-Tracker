@@ -10,11 +10,16 @@ export const categorizeExpense = async (text) => {
 function fallbackExtract(text) {
   let amount = null;
   let date = null;
-  // Find all numbers after "Total", "Amount", or "PAY"
-  const allAmounts = [...text.matchAll(/(?:Total|Amount|PAY)[:=]?\s*([\d.,]+)/gi)];
-  if (allAmounts.length > 0) {
-    amount = Math.max(...allAmounts.map(m => parseFloat(m[1].replace(/,/g, ''))));
+  // Improved: Find the largest number after 'Total Amount', 'PAY', or 'Total'
+  const totalRegex = /(?:Total Amount|PAY|Total)[:=]?\s*([\d.,]+)/gi;
+  let match, maxAmount = 0, allAmounts = [];
+  while ((match = totalRegex.exec(text)) !== null) {
+    const val = parseFloat(match[1].replace(/,/g, ''));
+    allAmounts.push(match[1]);
+    if (!isNaN(val) && val > maxAmount) maxAmount = val;
   }
+  if (maxAmount > 0) amount = maxAmount;
+  console.log('All matched amounts:', allAmounts);
   // Try to find date
   const dateMatch = text.match(/(\d{4}[\/-]\d{2}[\/-]\d{2})/) || text.match(/(\d{2}[\/-]\d{2}[\/-]\d{2,4})/);
   if (dateMatch) date = dateMatch[1];
