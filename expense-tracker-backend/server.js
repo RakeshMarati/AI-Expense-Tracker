@@ -17,6 +17,7 @@ app.use(cors({
   origin: [
     'https://ai-expense-tracker-7amg.vercel.app',
     'https://ai-expense-tracker-7am-git-3df9dd-rakesh-kumar-maratis-projects.vercel.app',
+    'https://ai-expense-tracker-gray.vercel.app', 
     'http://localhost:3000'
   ],
   credentials: true,
