@@ -37,51 +37,55 @@ async function openaiExtract(text) {
   }
 }
 
-// Helper: fallback regex extraction for amount and date
+// Improved fallback extraction for amount and date
 function fallbackExtract(text) {
   let amount = null;
   let date = null;
 
-  // Improved: Only match numbers after amount-related keywords, not Bill No.
-  const amountKeywords = [
-    'Amount Paid', 'Nett Amt', 'Net Amount', 'Total Amt', 'Total Amount', 'PAY', 'Amount', 'Grand Total', 'Total', 'Paid', 'Cash', 'Balance Due'
-  ];
-  let maxAmount = 0;
-  let found = false;
-
-  for (let keyword of amountKeywords) {
-    // Regex: keyword followed by optional non-digits, then a number
-    const regex = new RegExp(`${keyword}[^\d\n]{0,20}([0-9]{1,7}(?:\.[0-9]{1,2})?)`, 'i');
-    const match = text.match(regex);
-    if (match) {
-      const val = parseFloat(match[1].replace(/,/g, ''));
-      if (!isNaN(val) && val > maxAmount) {
-        maxAmount = val;
-        found = true;
+  // Improved: Find all lines with amount-related keywords, pick the largest number closest to the bottom
+  const lines = text.split('\n');
+  let amountCandidates = [];
+  for (let i = lines.length - 1; i >= 0; i--) {
+    const line = lines[i];
+    if (/total amount|pay|amount paid|nett amt|net amount|grand total|total|paid|cash|balance due/i.test(line)) {
+      const nums = line.match(/[0-9]+(?:\.[0-9]{1,2})?/g);
+      if (nums) {
+        amountCandidates.push(...nums.map(Number));
       }
     }
   }
-
-  // Fallback: If nothing found, use the largest number in the text (but skip Bill No. and similar fields)
-  if (!found) {
-    // Remove lines with Bill No., Invoice No., etc.
-    const filteredText = text.split('\n').filter(line => !/bill no|invoice no|order no|patient id|id[:\s]/i.test(line)).join('\n');
+  if (amountCandidates.length) {
+    amount = Math.max(...amountCandidates);
+  } else {
+    // Fallback: Use the largest number in the text (skip Bill/Invoice/Order numbers)
+    const filteredText = lines.filter(line => !/bill no|invoice no|order no|patient id|id[:\s]/i.test(line)).join('\n');
     const allNums = filteredText.match(/[0-9]{1,7}(?:\.[0-9]{1,2})?/g) || [];
+    let maxAmount = 0;
     for (let n of allNums) {
       const val = parseFloat(n.replace(/,/g, ''));
       if (!isNaN(val) && val > maxAmount) maxAmount = val;
     }
+    if (maxAmount > 0) amount = maxAmount;
   }
 
-  if (maxAmount > 0) amount = maxAmount;
-
-  // Date extraction (as before)
-  const dateMatch = text.match(/(\d{2}[\/\-]\d{2}[\/\-]\d{4})/);
-  if (dateMatch) {
-    let dateStr = dateMatch[1];
-    // Convert DD-MM-YYYY or DD/MM/YYYY to YYYY-MM-DD
-    const [dd, mm, yyyy] = dateStr.split(/[\/\-]/);
-    date = `${yyyy}-${mm}-${dd}`;
+  // Improved: Flexible date extraction (YYYY-MM-DD, DD/MM/YYYY, DD-MM-YYYY, etc.)
+  const dateRegexes = [
+    /(\d{4})[\/-](\d{2})[\/-](\d{2})/, // YYYY-MM-DD or YYYY/MM/DD
+    /(\d{2})[\/-](\d{2})[\/-](\d{4})/, // DD-MM-YYYY or DD/MM/YYYY
+    /(\d{2})[\/-](\d{2})[\/-](\d{2})/   // DD-MM-YY or DD/MM/YY
+  ];
+  for (let regex of dateRegexes) {
+    const match = text.match(regex);
+    if (match) {
+      if (regex === dateRegexes[0]) {
+        date = `${match[1]}-${match[2]}-${match[3]}`;
+      } else if (regex === dateRegexes[1]) {
+        date = `${match[3]}-${match[2]}-${match[1]}`;
+      } else if (regex === dateRegexes[2]) {
+        date = `20${match[3]}-${match[2]}-${match[1]}`;
+      }
+      break;
+    }
   }
 
   return { amount, date };
