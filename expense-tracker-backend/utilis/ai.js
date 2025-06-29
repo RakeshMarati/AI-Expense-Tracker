@@ -2,44 +2,49 @@
 function fallbackExtract(text) {
   let amount = null;
   let date = null;
-  // Try to match numbers after keywords
-  const totalRegex = /(?:Total Amount|PAY|Total|Amount)[^\d]{0,50}[:\s]*([0-9]{2,7}(?:\.\d{1,2})?)/gim;
-  let match, maxAmount = 0, allAmounts = [];
-  while ((match = totalRegex.exec(text)) !== null) {
-    const val = parseFloat(match[1].replace(/,/g, ''));
-    allAmounts.push(match[1]);
-    if (!isNaN(val) && val > maxAmount) maxAmount = val;
+
+  // Improved: Only match numbers after amount-related keywords, not Bill No.
+  const amountKeywords = [
+    'Amount Paid', 'Nett Amt', 'Net Amount', 'Total Amt', 'Total Amount', 'PAY', 'Amount', 'Grand Total', 'Total', 'Paid', 'Cash', 'Balance Due'
+  ];
+  let maxAmount = 0;
+  let found = false;
+
+  for (let keyword of amountKeywords) {
+    // Regex: keyword followed by optional non-digits, then a number
+    const regex = new RegExp(`${keyword}[^\d\n]{0,20}([0-9]{1,7}(?:\.[0-9]{1,2})?)`, 'i');
+    const match = text.match(regex);
+    if (match) {
+      const val = parseFloat(match[1].replace(/,/g, ''));
+      if (!isNaN(val) && val > maxAmount) {
+        maxAmount = val;
+        found = true;
+      }
+    }
   }
-  // If nothing found, fallback to largest number in the text
-  if (maxAmount === 0) {
-    const allNums = text.match(/[0-9]{2,7}(?:\.\d{1,2})?/g) || [];
+
+  // Fallback: If nothing found, use the largest number in the text (but skip Bill No. and similar fields)
+  if (!found) {
+    // Remove lines with Bill No., Invoice No., etc.
+    const filteredText = text.split('\n').filter(line => !/bill no|invoice no|order no|patient id|id[:\s]/i.test(line)).join('\n');
+    const allNums = filteredText.match(/[0-9]{1,7}(?:\.[0-9]{1,2})?/g) || [];
     for (let n of allNums) {
       const val = parseFloat(n.replace(/,/g, ''));
       if (!isNaN(val) && val > maxAmount) maxAmount = val;
     }
   }
+
   if (maxAmount > 0) amount = maxAmount;
-  
-  // Try to find date and format it properly
-  const dateMatch = text.match(/(\d{4}[\/-]\d{2}[\/-]\d{2})/) || text.match(/(\d{2}[\/-]\d{2}[\/-]\d{2,4})/);
+
+  // Date extraction (as before)
+  const dateMatch = text.match(/(\d{2}[\/\-]\d{2}[\/\-]\d{4})/);
   if (dateMatch) {
     let dateStr = dateMatch[1];
-    // Convert DD-MM-YYYY to YYYY-MM-DD
-    if (/^\d{2}[\/-]\d{2}[\/-]\d{4}$/.test(dateStr)) {
-      const [dd, mm, yyyy] = dateStr.split(/[\/-]/);
-      date = `${yyyy}-${mm}-${dd}`;
-    }
-    // Convert DD-MM-YY to YYYY-MM-DD
-    else if (/^\d{2}[\/-]\d{2}[\/-]\d{2}$/.test(dateStr)) {
-      const [dd, mm, yy] = dateStr.split(/[\/-]/);
-      date = `20${yy}-${mm}-${dd}`;
-    }
-    // Already in YYYY-MM-DD format
-    else if (/^\d{4}[\/-]\d{2}[\/-]\d{2}$/.test(dateStr)) {
-      date = dateStr.replace(/[\/-]/g, '-');
-    }
+    // Convert DD-MM-YYYY or DD/MM/YYYY to YYYY-MM-DD
+    const [dd, mm, yyyy] = dateStr.split(/[\/\-]/);
+    date = `${yyyy}-${mm}-${dd}`;
   }
-  
+
   return { amount, date };
 }
 
