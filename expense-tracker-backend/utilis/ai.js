@@ -1,3 +1,42 @@
+import axios from 'axios';
+
+// Add OpenAI integration
+let openaiApiKey = process.env.OPENAI_API_KEY;
+
+async function openaiExtract(text) {
+  if (!openaiApiKey) throw new Error('OpenAI API key not set');
+  const prompt = `Extract the following fields from this receipt text. Return a JSON object with these keys:\n- name: Merchant or store name\n- amount: Total amount paid (number)\n- date: Date of purchase (YYYY-MM-DD)\n- category: Expense category (guess if not explicit)\n- items: Array of objects, each with {name, qty, rate, amount}\n- paymentMethod: Payment method used (e.g., Cash, Card, UPI, PhonePe, etc.)\n- merchant: Merchant or store name (repeat if same as name)\n- address: Store address (if available)\nIf a field is missing, use an empty string or empty array. Here is the receipt text:\n"""\n${text}\n"""\nReturn only the JSON object.`;
+
+  const response = await axios.post(
+    'https://api.openai.com/v1/chat/completions',
+    {
+      model: 'gpt-3.5-turbo',
+      messages: [
+        { role: 'system', content: 'You are a helpful assistant that extracts structured data from receipts.' },
+        { role: 'user', content: prompt }
+      ],
+      temperature: 0.2,
+      max_tokens: 600
+    },
+    {
+      headers: {
+        'Authorization': `Bearer ${openaiApiKey}`,
+        'Content-Type': 'application/json'
+      }
+    }
+  );
+
+  // Try to parse the response as JSON
+  let content = response.data.choices[0].message.content;
+  try {
+    // Remove code block markers if present
+    content = content.replace(/^```json|```$/g, '').trim();
+    return JSON.parse(content);
+  } catch (e) {
+    throw new Error('OpenAI response could not be parsed as JSON');
+  }
+}
+
 // Helper: fallback regex extraction for amount and date
 function fallbackExtract(text) {
   let amount = null;
@@ -131,10 +170,21 @@ function extractAddress(text) {
   return "";
 }
 
-// Extract structured expense fields using fallback only (no OpenAI)
+// Extract structured expense fields using hybrid approach
 export const extractExpenseFields = async (text) => {
+  // Try OpenAI extraction first
+  try {
+    const aiResult = await openaiExtract(text);
+    // Validate required fields (amount, date, name)
+    if (aiResult && aiResult.amount && aiResult.date && aiResult.name) {
+      return { ...aiResult, _debug: { method: 'openai' } };
+    }
+    // If OpenAI returns incomplete, fallback
+  } catch (err) {
+    // Fallback to regex/heuristics
+  }
+  // Fallback extraction
   const fallback = fallbackExtract(text);
-
   return {
     name: guessMerchant(text),
     amount: fallback.amount,
@@ -144,6 +194,6 @@ export const extractExpenseFields = async (text) => {
     paymentMethod: extractPaymentMethod(text),
     merchant: guessMerchant(text),
     address: extractAddress(text),
-    _debug: { fallbackAmount: fallback.amount }
+    _debug: { fallbackAmount: fallback.amount, method: 'fallback' }
   };
 };
