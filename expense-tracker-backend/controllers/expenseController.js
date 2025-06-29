@@ -11,20 +11,47 @@ export const getExpenses = async (req, res) => {
 };
 
 export const addExpense = async (req, res) => {
-  const { name, amount, category, date } = req.body;
+  const { name, amount, category, date, currency } = req.body;
   try {
+    // Validate required fields
+    if (!name || !amount || !category || !date) {
+      return res.status(400).json({ 
+        msg: 'Missing required fields: name, amount, category, and date are required' 
+      });
+    }
+
+    // Validate date format
+    const parsedDate = new Date(date);
+    if (isNaN(parsedDate.getTime())) {
+      return res.status(400).json({ 
+        msg: 'Invalid date format. Please use YYYY-MM-DD format' 
+      });
+    }
+
+    // Validate amount
+    const numAmount = Number(amount);
+    if (isNaN(numAmount) || numAmount <= 0) {
+      return res.status(400).json({ 
+        msg: 'Invalid amount. Please provide a positive number' 
+      });
+    }
+
     const expense = new Expense({
       user: req.user.id,
       name,
-      amount,
+      amount: numAmount,
       category,
-      date
+      date: parsedDate,
+      currency: currency || 'INR'
     });
     await expense.save();
     res.json(expense);
   } catch (err) {
     console.error('Add Expense Error:', err);
-    res.status(500).send('Server error');
+    res.status(500).json({ 
+      msg: 'Server error', 
+      error: err.message 
+    });
   }
 };
 

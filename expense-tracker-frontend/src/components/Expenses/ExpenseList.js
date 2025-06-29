@@ -98,7 +98,7 @@ const ExpenseList = ({ expenses, onDeleteExpense, onModifyExpense }) => {
     <div className="expense-list-container">
       <h3 className="font-semibold mb-4 text-lg text-blue-600">Expenses</h3>
       <h4 className="font-semibold mb-2 text-base text-indigo-700">
-        Show Expenses Yearly
+        Yearly Expenses
       </h4>
 
       {/* Collapsible Grouped View */}

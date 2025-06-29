@@ -64,27 +64,53 @@ const ReceiptUpload = () => {
 
   // Helper to fix date format to YYYY-MM-DD
   function fixDateFormat(dateStr) {
+    if (!dateStr) return "";
+    
+    // Handle DD-MM-YY format (e.g., "21-06-75")
     if (/^\d{2}-\d{2}-\d{2}$/.test(dateStr)) {
-      const [yy, mm, dd] = dateStr.split("-");
+      const [dd, mm, yy] = dateStr.split("-");
       return `20${yy}-${mm}-${dd}`;
     }
+    
+    // Handle DD-MM-YYYY format (e.g., "21-06-2075")
+    if (/^\d{2}-\d{2}-\d{4}$/.test(dateStr)) {
+      const [dd, mm, yyyy] = dateStr.split("-");
+      return `${yyyy}-${mm}-${dd}`;
+    }
+    
+    // Handle YYYY-MM-DD format (already correct)
     if (/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) {
       return dateStr;
     }
+    
+    // Handle MM/DD/YYYY format (e.g., "06/21/2025")
+    if (/^\d{1,2}\/\d{1,2}\/\d{4}$/.test(dateStr)) {
+      const [mm, dd, yyyy] = dateStr.split("/");
+      return `${yyyy}-${mm.padStart(2, '0')}-${dd.padStart(2, '0')}`;
+    }
+    
     return "";
   }
 
   const handleSaveExpense = async () => {
+    if (!form.date || !fixDateFormat(form.date)) {
+      setSaveError('Date is required and must be in YYYY-MM-DD format.');
+      return;
+    }
     setSaveLoading(true);
     setSuccessMsg('');
     setSaveError('');
     try {
-      // Fix date and name before sending
       const fixedForm = {
         ...form,
         date: fixDateFormat(form.date),
         name: form.name || extractedData?.merchant || "Unknown Expense"
       };
+      
+      console.log('Original date:', form.date);
+      console.log('Fixed date:', fixedForm.date);
+      console.log('Sending expense data:', fixedForm);
+      
       await API.post('/expenses', fixedForm);
       setSuccessMsg('Expense saved successfully! Redirecting to expenses...');
       setTimeout(() => {
@@ -94,8 +120,9 @@ const ReceiptUpload = () => {
       setForm({ name: '', amount: '', date: '', category: '', currency: 'INR' });
       setFile(null);
     } catch (err) {
-      setSaveError('Failed to save expense. Please try again.');
-      console.error(err);
+      console.error('Save expense error:', err);
+      const errorMsg = err.response?.data?.msg || err.response?.data?.error || 'Failed to save expense. Please try again.';
+      setSaveError(errorMsg);
     } finally {
       setSaveLoading(false);
     }
