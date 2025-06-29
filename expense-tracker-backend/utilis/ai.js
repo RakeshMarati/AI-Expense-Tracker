@@ -172,18 +172,20 @@ function extractAddress(text) {
 
 // Extract structured expense fields using hybrid approach
 export const extractExpenseFields = async (text) => {
-  // Try OpenAI extraction first
   try {
+    console.log('Trying OpenAI extraction...');
     const aiResult = await openaiExtract(text);
-    // Validate required fields (amount, date, name)
     if (aiResult && aiResult.amount && aiResult.date && aiResult.name) {
+      console.log('OpenAI extraction succeeded:', aiResult);
       return { ...aiResult, _debug: { method: 'openai' } };
+    } else {
+      console.log('OpenAI extraction incomplete, falling back.');
     }
-    // If OpenAI returns incomplete, fallback
   } catch (err) {
-    // Fallback to regex/heuristics
+    console.error('OpenAI extraction failed:', err);
   }
   // Fallback extraction
+  console.log('Using fallback extraction.');
   const fallback = fallbackExtract(text);
   return {
     name: guessMerchant(text),
