@@ -43,12 +43,32 @@ const Dashboard = () => {
           {goals.length === 0 ? (
             <p className="dashboard-subtext">No goals set yet.</p>
           ) : (
-            <ul>
-              {goals.map(goal => (
-                <li key={goal._id || goal.id}>
-                  {goal.description} <span className="goals-status">{goal.status}</span>
-                </li>
-              ))}
+            <ul className="dashboard-goals-list">
+              {goals.map(goal => {
+                // Calculate progress if possible
+                let progress = 0;
+                if (goal.targetAmount && goal.currentAmount) {
+                  progress = Math.min(100, Math.round((goal.currentAmount / goal.targetAmount) * 100));
+                }
+                return (
+                  <li key={goal._id || goal.id} className="dashboard-goal-item">
+                    <div className="dashboard-goal-header">
+                      <span className="dashboard-goal-desc">{goal.description}</span>
+                      <span className={`dashboard-goal-status goal-status-badge ${goal.status?.toLowerCase().replace(' ', '-')}`}>{goal.status}</span>
+                    </div>
+                    <div className="dashboard-goal-details">
+                      <span>Target: <b>{goal.targetAmount} {goal.currency}</b></span>
+                      {goal.deadline && <span>Deadline: <b>{goal.deadline.slice(0,10)}</b></span>}
+                    </div>
+                    {goal.currentAmount !== undefined && goal.targetAmount ? (
+                      <div className="dashboard-goal-progress">
+                        <div className="dashboard-goal-progress-bar" style={{ width: progress + '%'}}></div>
+                        <span className="dashboard-goal-progress-label">{progress}%</span>
+                      </div>
+                    ) : null}
+                  </li>
+                );
+              })}
             </ul>
           )}
         </div>
