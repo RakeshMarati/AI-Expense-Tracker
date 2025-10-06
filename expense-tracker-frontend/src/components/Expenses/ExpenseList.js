@@ -54,7 +54,6 @@ const ExpenseList = () => {
 
   // Find the most recent year and month if none are selected
   const years = Object.keys(grouped).sort((a, b) => b - a);
-  const mostRecentYear = years[0];
 
   // Sort expenses by date descending and take the latest 10
   const latestExpenses = [...expenses]
