@@ -57,12 +57,7 @@ const ExpenseList = () => {
   const mostRecentYear = years[0];
   const months = mostRecentYear ? Object.keys(grouped[mostRecentYear]).sort((a, b) => b - a) : [];
   const mostRecentMonth = months[0];
-  const monthNames = [
-    '', 'January', 'February', 'March', 'April', 'May', 'June',
-    'July', 'August', 'September', 'October', 'November', 'December'
-  ];
   const displayYear = openYear || mostRecentYear;
-  const displayMonth = openMonth[displayYear + mostRecentMonth] || mostRecentMonth;
 
   // Sort expenses by date descending and take the latest 10
   const latestExpenses = [...expenses]
