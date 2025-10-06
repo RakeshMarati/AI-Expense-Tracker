@@ -1,19 +1,21 @@
 import React, { useState } from 'react';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { addExpense } from '../../store/slices/expensesSlice';
 import API from '../../api/api';
 import './ReceiptUpload.css';
 
 const ReceiptUpload = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { addLoading, error: expenseError } = useSelector((state) => state.expenses);
   const [file, setFile] = useState(null);
   const [extractedData, setExtractedData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [form, setForm] = useState({ name: '', amount: '', date: '', category: '', currency: 'INR' });
-  const [saveLoading, setSaveLoading] = useState(false);
   const [successMsg, setSuccessMsg] = useState('');
   const [saveError, setSaveError] = useState('');
-  const navigate = useNavigate();
 
   const handleFileChange = (e) => {
     setFile(e.target.files[0]);
@@ -97,21 +99,21 @@ const ReceiptUpload = () => {
       setSaveError('Date is required and must be in YYYY-MM-DD format.');
       return;
     }
-    setSaveLoading(true);
     setSuccessMsg('');
     setSaveError('');
-    try {
-      const fixedForm = {
-        ...form,
-        date: fixDateFormat(form.date),
-        name: form.name || extractedData?.merchant || "Unknown Expense"
-      };
-      
-      console.log('Original date:', form.date);
-      console.log('Fixed date:', fixedForm.date);
-      console.log('Sending expense data:', fixedForm);
-      
-      await API.post('/expenses', fixedForm);
+    
+    const fixedForm = {
+      ...form,
+      date: fixDateFormat(form.date),
+      name: form.name || extractedData?.merchant || "Unknown Expense"
+    };
+    
+    console.log('Original date:', form.date);
+    console.log('Fixed date:', fixedForm.date);
+    console.log('Sending expense data:', fixedForm);
+    
+    const result = await dispatch(addExpense(fixedForm));
+    if (addExpense.fulfilled.match(result)) {
       setSuccessMsg('Expense saved successfully! Redirecting to expenses...');
       setTimeout(() => {
         navigate('/expenses');
@@ -119,12 +121,8 @@ const ReceiptUpload = () => {
       setExtractedData(null);
       setForm({ name: '', amount: '', date: '', category: '', currency: 'INR' });
       setFile(null);
-    } catch (err) {
-      console.error('Save expense error:', err);
-      const errorMsg = err.response?.data?.msg || err.response?.data?.error || 'Failed to save expense. Please try again.';
-      setSaveError(errorMsg);
-    } finally {
-      setSaveLoading(false);
+    } else {
+      setSaveError(expenseError || 'Failed to save expense. Please try again.');
     }
   };
 
@@ -259,8 +257,8 @@ const ReceiptUpload = () => {
               )}
             </form>
           </div>
-          <button className="save-expense-btn" onClick={handleSaveExpense} disabled={saveLoading}>
-            {saveLoading ? 'Saving...' : 'Confirm and Save Expense'}
+          <button className="save-expense-btn" onClick={handleSaveExpense} disabled={addLoading}>
+            {addLoading ? 'Saving...' : 'Confirm and Save Expense'}
           </button>
           {successMsg && <p className="success-message">{successMsg}</p>}
           {saveError && <p className="error-message">{saveError}</p>}

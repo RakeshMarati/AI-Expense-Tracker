@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { updateExpense, deleteExpense } from "../../store/slices/expensesSlice";
 import "./ExpenseList.css";
 
 const categories = [
@@ -38,7 +40,9 @@ const groupExpenses = (expenses) => {
 const getTotal = (expenses) =>
   expenses.reduce((sum, exp) => sum + Number(exp.amount), 0);
 
-const ExpenseList = ({ expenses, onDeleteExpense, onModifyExpense }) => {
+const ExpenseList = () => {
+  const dispatch = useDispatch();
+  const { expenses, updateLoading, deleteLoading, error } = useSelector((state) => state.expenses);
   const [editingId, setEditingId] = useState(null);
   const [editForm, setEditForm] = useState({ name: "", amount: "", category: "", date: "", currency: "INR" });
 
@@ -59,7 +63,6 @@ const ExpenseList = ({ expenses, onDeleteExpense, onModifyExpense }) => {
   ];
   const displayYear = openYear || mostRecentYear;
   const displayMonth = openMonth[displayYear + mostRecentMonth] || mostRecentMonth;
-  const displayMonthName = displayMonth ? monthNames[parseInt(displayMonth, 10)] : '';
 
   // Sort expenses by date descending and take the latest 10
   const latestExpenses = [...expenses]
@@ -82,9 +85,17 @@ const ExpenseList = ({ expenses, onDeleteExpense, onModifyExpense }) => {
     setEditForm({ ...editForm, [e.target.name]: e.target.value });
   };
 
-  const handleEditSave = (id) => {
-    onModifyExpense(id, editForm);
-    setEditingId(null);
+  const handleEditSave = async (id) => {
+    const result = await dispatch(updateExpense({ id, expenseData: editForm }));
+    if (updateExpense.fulfilled.match(result)) {
+      setEditingId(null);
+    }
+  };
+
+  const handleDelete = async (id) => {
+    if (window.confirm('Are you sure you want to delete this expense?')) {
+      await dispatch(deleteExpense(id));
+    }
   };
 
   // Calculate totals by currency
@@ -97,6 +108,7 @@ const ExpenseList = ({ expenses, onDeleteExpense, onModifyExpense }) => {
   return (
     <div className="expense-list-container">
       <h3 className="font-semibold mb-4 text-lg text-blue-600">Expenses</h3>
+      {error && <div className="error-message" style={{ color: 'red', marginBottom: '10px' }}>{error}</div>}
       <h4 className="font-semibold mb-2 text-base text-indigo-700">
         Yearly Expenses
       </h4>
@@ -197,7 +209,9 @@ const ExpenseList = ({ expenses, onDeleteExpense, onModifyExpense }) => {
                                           <option value="USD">$ USD</option>
                                           <option value="EUR">€ EUR</option>
                                         </select>
-                                        <button className="expense-btn save-btn" onClick={() => handleEditSave(exp._id || exp.id)}>Save</button>
+                                        <button className="expense-btn save-btn" onClick={() => handleEditSave(exp._id || exp.id)} disabled={updateLoading}>
+                                          {updateLoading ? 'Saving...' : 'Save'}
+                                        </button>
                                         <button className="expense-btn cancel-btn" onClick={() => setEditingId(null)}>Cancel</button>
                                       </>
                                     ) : (
@@ -206,7 +220,9 @@ const ExpenseList = ({ expenses, onDeleteExpense, onModifyExpense }) => {
                                         <span className="category">({exp.category})</span>
                                         <span className="currency-amount">{getCurrencySymbol(exp.currency || "INR")}{exp.amount}</span>
                                         <button className="expense-btn modify-btn" onClick={() => startEdit(exp)}>Modify</button>
-                                        <button className="expense-btn delete-btn" onClick={() => onDeleteExpense(exp._id || exp.id)}>Delete</button>
+                                        <button className="expense-btn delete-btn" onClick={() => handleDelete(exp._id || exp.id)} disabled={deleteLoading}>
+                                          {deleteLoading ? 'Deleting...' : 'Delete'}
+                                        </button>
                                       </>
                                     )}
                                   </span>
@@ -295,7 +311,9 @@ const ExpenseList = ({ expenses, onDeleteExpense, onModifyExpense }) => {
                     </select>
                   </td>
                   <td data-label="Actions">
-                    <button className="expense-btn save-btn" onClick={() => handleEditSave(exp._id || exp.id)}>Save</button>
+                    <button className="expense-btn save-btn" onClick={() => handleEditSave(exp._id || exp.id)} disabled={updateLoading}>
+                      {updateLoading ? 'Saving...' : 'Save'}
+                    </button>
                     <button className="expense-btn cancel-btn" onClick={() => setEditingId(null)}>Cancel</button>
                   </td>
                 </>
@@ -311,7 +329,9 @@ const ExpenseList = ({ expenses, onDeleteExpense, onModifyExpense }) => {
                   <td data-label="Currency">{exp.currency || "INR"}</td>
                   <td data-label="Actions">
                     <button className="expense-btn modify-btn" onClick={() => startEdit(exp)}>Modify</button>
-                    <button className="expense-btn delete-btn" onClick={() => onDeleteExpense(exp._id || exp.id)}>Delete</button>
+                    <button className="expense-btn delete-btn" onClick={() => handleDelete(exp._id || exp.id)} disabled={deleteLoading}>
+                      {deleteLoading ? 'Deleting...' : 'Delete'}
+                    </button>
                   </td>
                 </>
               )}

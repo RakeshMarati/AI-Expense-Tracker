@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { addExpense } from "../../store/slices/expensesSlice";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import "./AddExpense.css";
@@ -21,7 +23,9 @@ const currencies = [
   // Add more if needed
 ];
 
-const AddExpense = ({ onAddExpense }) => {
+const AddExpense = () => {
+  const dispatch = useDispatch();
+  const { addLoading, error } = useSelector((state) => state.expenses);
   const [form, setForm] = useState({
     name: "",
     amount: "",
@@ -42,18 +46,20 @@ const AddExpense = ({ onAddExpense }) => {
     setForm(f => ({ ...f, date: formatted }));
   };
 
-  const handleSubmit = e => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (form.name && form.amount && form.category && form.date && form.category !== "") {
-      onAddExpense({ ...form });
-      setForm({
-        name: "",
-        amount: "",
-        category: "",
-        date: "",
-        currency: currencies[0].code
-      });
-      setDateObj(null);
+      const result = await dispatch(addExpense({ ...form }));
+      if (addExpense.fulfilled.match(result)) {
+        setForm({
+          name: "",
+          amount: "",
+          category: "",
+          date: "",
+          currency: currencies[0].code
+        });
+        setDateObj(null);
+      }
     }
   };
 
@@ -108,7 +114,10 @@ const AddExpense = ({ onAddExpense }) => {
             </option>
           ))}
         </select>
-        <button type="submit">Add</button>
+        <button type="submit" disabled={addLoading}>
+          {addLoading ? 'Adding...' : 'Add'}
+        </button>
+        {error && <div className="error-message" style={{ color: 'red', marginTop: '10px' }}>{error}</div>}
       </form>
     </div>
   );

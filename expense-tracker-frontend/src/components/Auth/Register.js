@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import API from "../../api/api";
+import { useDispatch, useSelector } from "react-redux";
+import { registerUser, clearError } from "../../store/slices/authSlice";
 import "./Register.css";
 
 const Register = () => {
@@ -13,8 +14,10 @@ const Register = () => {
     email: "",
     password: ""
   });
-  const [error, setError] = useState("");
+  const [validationError, setValidationError] = useState("");
+  const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { loading, error } = useSelector((state) => state.auth);
 
   const validateMobile = (mobile) => /^\d{10}$/.test(mobile);
   const validatePassword = (password) =>
@@ -24,28 +27,22 @@ const Register = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError("");
+    setValidationError("");
+    dispatch(clearError());
+    
     if (!validateMobile(form.mobile)) {
-      setError("Mobile number must be 10 digits.");
+      setValidationError("Mobile number must be 10 digits.");
       return;
     }
     if (!validatePassword(form.password)) {
-      setError("Password must have at least one letter, one number, and one special character.");
+      setValidationError("Password must have at least one letter, one number, and one special character.");
       return;
     }
-    try {
-      const res = await API.post("/auth/register", form);
-      localStorage.setItem("token", res.data.token);
-      localStorage.setItem("user", JSON.stringify({ firstName: form.firstName, lastName: form.lastName }));
+    
+    const result = await dispatch(registerUser(form));
+    if (registerUser.fulfilled.match(result)) {
       window.dispatchEvent(new Event("auth"));
       navigate("/dashboard");
-    } catch (err) {
-      
-      const backendMsg =
-        err.response?.data?.msg ||
-        err.response?.data?.message ||
-        err.response?.data?.error;
-      setError(backendMsg || "Registration failed");
     }
   };
 
@@ -65,8 +62,10 @@ const Register = () => {
         <input className="register-input" type="text" name="mobile" placeholder="Mobile Number" value={form.mobile} onChange={handleChange} required />
         <input className="register-input" type="email" name="email" placeholder="Email" value={form.email} onChange={handleChange} required />
         <input className="register-input" type="password" name="password" placeholder="Password" value={form.password} onChange={handleChange} required />
-        <button className="register-btn" type="submit">Register</button>
-        {error && <div className="register-error">{error}</div>}
+        <button className="register-btn" type="submit" disabled={loading}>
+          {loading ? 'Registering...' : 'Register'}
+        </button>
+        {(error || validationError) && <div className="register-error">{error || validationError}</div>}
       </form>
       <p className="mt-6 text-center text-sm text-gray-500">
         Already have an account?

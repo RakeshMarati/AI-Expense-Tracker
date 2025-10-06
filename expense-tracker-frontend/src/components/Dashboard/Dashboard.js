@@ -1,32 +1,21 @@
-import React, { useEffect, useState } from "react";
-import API from "../../api/api";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchExpenses } from "../../store/slices/expensesSlice";
+import { fetchGoalsAsync } from "../../store/slices/goalsSlice";
 import SpendingChart from "./SpendingChart";
 import "./Dashboard.css";
 
 const Dashboard = () => {
-  const [goals, setGoals] = useState([]);
-  const [expenses, setExpenses] = useState([]);
-  const [loading, setLoading] = useState(true);
-
-  const fetchData = () => {
-    setLoading(true);
-    Promise.all([
-      API.get("/goals"),
-      API.get("/expenses")
-    ])
-      .then(([goalsRes, expensesRes]) => {
-        setGoals(goalsRes.data);
-        setExpenses(expensesRes.data);
-      })
-      .catch((err) => {
-        console.error("Failed to fetch dashboard data:", err);
-      })
-      .finally(() => setLoading(false));
-  };
+  const dispatch = useDispatch();
+  const { expenses, loading: expensesLoading } = useSelector((state) => state.expenses);
+  const { goals, loading: goalsLoading } = useSelector((state) => state.goals);
 
   useEffect(() => {
-    fetchData();
-  }, []);
+    dispatch(fetchExpenses());
+    dispatch(fetchGoalsAsync());
+  }, [dispatch]);
+
+  const loading = expensesLoading || goalsLoading;
 
   if (loading) return <div>Loading dashboard...</div>;
 

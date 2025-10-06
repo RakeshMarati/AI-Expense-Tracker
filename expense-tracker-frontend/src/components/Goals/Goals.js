@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from "react";
-import { addGoal, updateGoal, deleteGoal, fetchGoals } from "../../api/api";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchGoalsAsync, addGoalAsync, updateGoalAsync, deleteGoalAsync } from "../../store/slices/goalsSlice";
 import "./Goals.css";
 
 const currencyOptions = ["USD", "INR", "EUR"];
 const statusOptions = ["In Progress", "Completed", "Achieved", "Failed"];
 
 const Goals = () => {
-  const [goals, setGoals] = useState([]);
-  const [error, setError] = useState("");
+  const dispatch = useDispatch();
+  const { goals, loading, error, addLoading, updateLoading, deleteLoading } = useSelector((state) => state.goals);
   const [adding, setAdding] = useState(false);
   const [newGoal, setNewGoal] = useState({
     description: "",
@@ -17,43 +18,25 @@ const Goals = () => {
   });
   const [editingId, setEditingId] = useState(null);
   const [editGoal, setEditGoal] = useState({});
-  const [loading, setLoading] = useState(true);
-
-  // Fetch goals from backend
-  const refreshGoals = () => {
-    setLoading(true);
-    fetchGoals()
-      .then(res => setGoals(res.data))
-      .catch(() => setError("Failed to fetch goals"))
-      .finally(() => setLoading(false));
-  };
 
   useEffect(() => {
-    refreshGoals();
-  }, []);
+    dispatch(fetchGoalsAsync());
+  }, [dispatch]);
 
   // Add goal handler
   const handleAddGoal = async (e) => {
     e.preventDefault();
-    try {
-      await addGoal(newGoal);
+    const result = await dispatch(addGoalAsync(newGoal));
+    if (addGoalAsync.fulfilled.match(result)) {
       setNewGoal({ description: "", targetAmount: "", currency: "USD", deadline: "" });
       setAdding(false);
-      refreshGoals(); // Refetch after add
-    } catch {
-      setError("Failed to add goal");
     }
   };
 
   // Delete goal handler
   const handleDelete = async (id) => {
     if (!window.confirm("Delete this goal?")) return;
-    try {
-      await deleteGoal(id);
-      refreshGoals(); // Refetch after delete
-    } catch {
-      setError("Failed to delete goal");
-    }
+    await dispatch(deleteGoalAsync(id));
   };
 
   // Start editing
@@ -66,13 +49,10 @@ const Goals = () => {
   // Edit goal handler
   const handleEditGoal = async (e) => {
     e.preventDefault();
-    try {
-      await updateGoal(editingId, editGoal);
+    const result = await dispatch(updateGoalAsync({ id: editingId, goalData: editGoal }));
+    if (updateGoalAsync.fulfilled.match(result)) {
       setEditingId(null);
       setEditGoal({});
-      refreshGoals(); // Refetch after edit
-    } catch {
-      setError("Failed to update goal");
     }
   };
 
@@ -128,7 +108,9 @@ const Goals = () => {
                       <option key={status} value={status}>{status}</option>
                     ))}
                   </select>
-                  <button className="goal-btn save-btn" type="submit">Save</button>
+                  <button className="goal-btn save-btn" type="submit" disabled={updateLoading}>
+                    {updateLoading ? 'Saving...' : 'Save'}
+                  </button>
                   <button className="goal-btn cancel-btn" type="button" onClick={() => { setEditingId(null); setEditGoal({}); }}>Cancel</button>
                 </form>
               ) : (
@@ -138,7 +120,9 @@ const Goals = () => {
                     <span className={`goal-status-badge ${goal.status?.toLowerCase().replace(' ', '-')}`}>{goal.status}</span>
                   </span>
                   <button className="goal-btn edit-btn" onClick={() => startEdit(goal)}>Edit</button>
-                  <button className="goal-btn delete-btn" onClick={() => handleDelete(goal._id || goal.id)}>Delete</button>
+                  <button className="goal-btn delete-btn" onClick={() => handleDelete(goal._id || goal.id)} disabled={deleteLoading}>
+                    {deleteLoading ? 'Deleting...' : 'Delete'}
+                  </button>
                 </>
               )}
             </li>
@@ -188,7 +172,9 @@ const Goals = () => {
               <option key={status} value={status}>{status}</option>
             ))}
           </select>
-          <button className="goal-btn save-btn" type="submit">Add Goal</button>
+          <button className="goal-btn save-btn" type="submit" disabled={addLoading}>
+            {addLoading ? 'Adding...' : 'Add Goal'}
+          </button>
           <button className="goal-btn cancel-btn" type="button" onClick={() => setAdding(false)}>Cancel</button>
         </form>
       )}
